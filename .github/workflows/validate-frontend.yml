@@ -1,0 +1,29 @@
+name: Validate Code
+
+on:
+  push:
+    paths:
+      - 'frontend/**'
+    branches:
+      - '**'
+
+jobs:
+  validate_code:
+    runs-on: ubuntu-latest
+    container:
+      image: node:18
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enable corepack
+        run: corepack enable
+        working-directory: frontend
+
+      - name: Install dependencies
+        run: pnpm install
+        working-directory: frontend
+
+      - name: Validate code
+        run: pnpm validate-code
+        working-directory: frontend
