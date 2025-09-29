@@ -1,0 +1,28 @@
+run_name: breakout_dqn_v0
+env_id: ALE/Breakout-v5          # Gymnasium Atari env id
+seed: 42
+total_timesteps: 150000          # Total training timesteps
+
+# where to save things
+log_dir: drl-game/runs/breakout_dqn_v0
+save_dir: drl-game/models/breakout_dqn_v0
+
+# DQN hyperparams 
+dqn:
+
+  learning_rate: 1.0e-4 
+  buffer_size: 100000  
+  learning_starts: 5000
+  batch_size: 32
+  gamma: 0.99
+  train_freq: 4
+  target_update_interval: 10000
+  exploration_fraction: 0.1
+  exploration_final_eps: 0.01
+
+# evaluation during training
+eval:
+  enabled: true
+  freq: 10000                     # evaluate every N'th steps
+  n_episodes: 5
+  deterministic: true
