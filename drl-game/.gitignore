@@ -1,0 +1,5 @@
+drl-game/models/
+drl-game/runs/
+**/__pycache__/
+*.pyc
+.venv/

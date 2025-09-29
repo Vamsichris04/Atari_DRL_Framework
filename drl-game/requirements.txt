@@ -1,0 +1,14 @@
+# Core RL stack
+stable-baselines3==2.3.0
+numpy>=1.23
+
+# Atari + Gymnasium tooling
+gymnasium[atari,accept-rom-license]==0.29.1
+ale-py==0.8.1
+autorom[accept-rom-license]==0.6.1
+
+# Logging / visualization
+tensorboard>=2.14
+
+# Deep learning backend 
+torch>=2.1
