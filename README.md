@@ -9,7 +9,7 @@
 	```
 	If `conda` is missing, install Miniconda/Anaconda and add the launcher directory to `PATH`, e.g.:
 	```
-	C:\Users\sudersanamv\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Anaconda (anaconda3)
+	C:\Users\<Username>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Anaconda (anaconda3)
 	```
 
 2. Install training dependencies:
