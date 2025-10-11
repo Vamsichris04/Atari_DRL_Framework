@@ -1,16 +1,8 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+import React from 'react';
+import { DataProvider } from '@/providers/data';
+import { Navigation } from '@/components/navigation';
 
 export const metadata: Metadata = {
   title: 'Atari DRL',
@@ -24,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body>
+        <DataProvider>
+          <div className="w-full">{children}</div>
+          <Navigation />
+        </DataProvider>
+      </body>
     </html>
   );
 }
