@@ -10,7 +10,7 @@ function Page() {
   const { inputData } = useData();
   const selectedEnv = inputData.game;
   const [instanceId, setInstanceId] = useState<number | null>(null);
-  const [observation, setObservation] = useState(null);
+  const [observation, setObservation] = useState<number[] | null>(null);
   const [reward, setReward] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [statusMessage, setStatusMessage] = useState('Loading...');
@@ -106,27 +106,50 @@ function Page() {
 
   return (
     <div className="flex gap-2 m-2">
-      <div>
-        <div>
-          <h1>
-            <b>{selectedEnv}</b>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-lg">
+            <b>
+              {selectedEnv
+                .replace(/-v\d+/g, '')
+                .replace(/([A-Z])/g, ' $1')
+                .trim()}
+            </b>
           </h1>
           <p>{statusMessage}</p>
-          <Button
-            className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-600"
-            onClick={() => reset(instanceId as number)}
-            disabled={!isDone}
-          >
-            Reset Environment (Enter)
-          </Button>
+          <div>
+            <Button
+              className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-600"
+              onClick={() => reset(instanceId as number)}
+            >
+              Reset Environment (Enter)
+            </Button>
+          </div>
         </div>
         <div>
           {observation && (
-            <div className="game-container">
-              <h2>Current State</h2>
-              <pre>{JSON.stringify(observation, null, 2)}</pre>
-              <h3>Reward: {reward}</h3>
-              <div className="flex gap-2">{getActionButtons()}</div>
+            <div className="flex flex-col gap-2">
+              <div className="border">
+                <h2>
+                  <b>Current State:</b>
+                </h2>
+                <div>
+                  {GAMES.find((game) => game.name === selectedEnv)?.observations.map(
+                    (label, index) => (
+                      <div key={index} className="flex justify-between gap-2">
+                        <p>{`${label}:`}</p>
+                        <p>{observation[index]}</p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <h3>
+                  <b>Reward:</b> {reward}
+                </h3>
+                <div className="flex gap-2">{getActionButtons()}</div>
+              </div>
             </div>
           )}
         </div>
@@ -136,7 +159,7 @@ function Page() {
           <img
             src={`data:image/png;base64,${renderedImage}`}
             alt={selectedEnv}
-            className="border"
+            className="border border-2"
           />
         )}
       </div>
