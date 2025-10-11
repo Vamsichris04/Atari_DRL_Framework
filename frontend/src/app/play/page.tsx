@@ -46,7 +46,7 @@ function Page() {
     try {
       const data = await takeAction(instanceId, action);
       setObservation(data.observation);
-      setReward(data.reward);
+      setReward(data.reward === 0 ? 0 : reward + data.reward);
       setIsDone(data.episodeDone);
       setStatusMessage(data.episodeDone ? 'Episode finished!' : 'Action taken.');
       await render(instanceId);
@@ -88,25 +88,11 @@ function Page() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [instanceId, isDone, selectedEnv]);
-
-  const getActionButtons = () => {
-    const labels =
-      GAMES.find((game) => game.name === selectedEnv)?.actions.map((action) => action.label) ?? [];
-    return labels.map((label, index) => (
-      <Button
-        key={index}
-        className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600"
-        onClick={() => action(index)}
-      >
-        {label}
-      </Button>
-    ));
-  };
+  }, [instanceId, isDone, selectedEnv, reward]);
 
   return (
     <div className="flex gap-2 m-2">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 w-2/5">
         <div className="flex flex-col gap-2">
           <h1 className="text-lg">
             <b>
@@ -148,7 +134,19 @@ function Page() {
                 <h3>
                   <b>Reward:</b> {reward}
                 </h3>
-                <div className="flex gap-2">{getActionButtons()}</div>
+                <div className="flex gap-2">
+                  {GAMES.find((game) => game.name === selectedEnv)
+                    ?.actions.map((action) => action.label)
+                    .map((label, index) => (
+                      <Button
+                        key={index}
+                        className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600"
+                        onClick={() => action(index)}
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                </div>
               </div>
             </div>
           )}
