@@ -17,6 +17,7 @@ export const GAMES = [
         label: 'Push Right (→)',
       },
     ],
+    observations: ['Cart Position', 'Cart Velocity', 'Pole Angle', 'Pole Angular Velocity'],
   },
   {
     name: 'Acrobot-v1',
@@ -31,6 +32,14 @@ export const GAMES = [
         action: 1,
         label: 'Torque +1 (→)',
       },
+    ],
+    observations: [
+      'Cosine of theta1',
+      'Sine of theta1',
+      'Cosine of theta2',
+      'Sine of theta2',
+      'Angular Velocity of theta1',
+      'Angular Velocity of theta2',
     ],
   },
   {
@@ -52,6 +61,7 @@ export const GAMES = [
         label: 'Accelerate Right (→)',
       },
     ],
+    observations: ['Position of the Car Along the X-Axis', 'Velocity of the Car'],
   },
 ];
 
