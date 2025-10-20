@@ -1,0 +1,29 @@
+# Enduro - Racing game with day/night cycles and long episodes
+# Requires consistent overtaking strategy over time
+run_name: enduro_dqn_v0
+env_id: ALE/Enduro-v5
+seed: 42
+total_timesteps: 1_500_000       # Racing games need extended training
+
+# where to save things
+log_dir: drl-game/runs/enduro_dqn_v0
+save_dir: drl-game/models/enduro_dqn_v0
+
+# DQN hyperparams - tuned for racing game
+dqn:
+  learning_rate: 1.0e-4
+  buffer_size: 250_000           # Moderate buffer (memory-friendly)
+  learning_starts: 10_000        # Warmup to learn basic driving
+  batch_size: 32
+  gamma: 0.99                    # High gamma for long-term racing strategy
+  train_freq: 4
+  target_update_interval: 10_000
+  exploration_fraction: 0.4      # Extended exploration for day/night patterns
+  exploration_final_eps: 0.01
+
+# evaluation during training
+eval:
+  enabled: true
+  freq: 25_000                   # Less frequent eval (episodes can be very long)
+  n_episodes: 3                  # Fewer episodes (each is long)
+  deterministic: true

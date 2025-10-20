@@ -1,0 +1,29 @@
+# Q*bert - Jump on cubes to change colors while avoiding enemies
+# Complex spatial reasoning and timing required
+run_name: qbert_dqn_v0
+env_id: ALE/Qbert-v5
+seed: 42
+total_timesteps: 1_500_000       # Q*bert needs extended training for patterns
+
+# where to save things
+log_dir: drl-game/runs/qbert_dqn_v0
+save_dir: drl-game/models/qbert_dqn_v0
+
+# DQN hyperparams - tuned for puzzle-action hybrid
+dqn:
+  learning_rate: 1.0e-4
+  buffer_size: 400_000           # Large buffer for diverse enemy/cube patterns
+  learning_starts: 10_000        # Warmup to learn basic movement
+  batch_size: 32
+  gamma: 0.99
+  train_freq: 4
+  target_update_interval: 10_000
+  exploration_fraction: 0.35     # Extended exploration for complex patterns
+  exploration_final_eps: 0.01
+
+# evaluation during training
+eval:
+  enabled: true
+  freq: 25_000                   # Less frequent eval (episodes can vary in length)
+  n_episodes: 5
+  deterministic: true
