@@ -1,0 +1,29 @@
+# Seaquest - Underwater shooter with oxygen management
+# Must balance shooting enemies, collecting divers, and surfacing for air
+run_name: seaquest_dqn_v0
+env_id: ALE/Seaquest-v5
+seed: 42
+total_timesteps: 2_000_000       # Complex multi-objective game needs longest training
+
+# where to save things
+log_dir: drl-game/runs/seaquest_dqn_v0
+save_dir: drl-game/models/seaquest_dqn_v0
+
+# DQN hyperparams - tuned for resource management shooter
+dqn:
+  learning_rate: 1.0e-4
+  buffer_size: 500_000           # Large buffer for diverse scenarios (oxygen levels, diver positions)
+  learning_starts: 10_000        # Warmup for complex multi-task learning
+  batch_size: 32
+  gamma: 0.99                    # High gamma for long-term oxygen planning
+  train_freq: 4
+  target_update_interval: 10_000
+  exploration_fraction: 0.4      # Extended exploration for oxygen/diver trade-offs
+  exploration_final_eps: 0.01
+
+# evaluation during training
+eval:
+  enabled: true
+  freq: 50_000                   # Very infrequent eval (complex, long episodes)
+  n_episodes: 3
+  deterministic: true
