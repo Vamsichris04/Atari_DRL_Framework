@@ -5,10 +5,13 @@ import { useData } from '@/providers/data';
 import { GAMES } from '@/constants/constants';
 import { Button } from '@/components/ui/button';
 import { createEnvironment, fetchRender, resetEnvironment, takeAction } from '@/api/api';
+import { cn } from '@/lib/utils';
+import { Game } from '@/types/types';
+import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 function Page() {
   const { inputData } = useData();
-  const selectedEnv = inputData.game;
+  const game: Game = GAMES.find((game) => game.name === inputData.game) as Game;
   const [instanceId, setInstanceId] = useState<number | null>(null);
   const [observation, setObservation] = useState<number[] | null>(null);
   const [reward, setReward] = useState(0);
@@ -18,7 +21,7 @@ function Page() {
 
   async function create() {
     try {
-      const newInstanceId = await createEnvironment(selectedEnv);
+      const newInstanceId = await createEnvironment(game.name);
       setInstanceId(newInstanceId);
       await reset(newInstanceId);
     } catch (error) {
@@ -48,7 +51,11 @@ function Page() {
       setObservation(data.observation);
       setReward(data.reward === 0 ? 0 : reward + data.reward);
       setIsDone(data.episodeDone);
-      setStatusMessage(data.episodeDone ? 'Episode finished!' : 'Action taken.');
+      setStatusMessage(
+        data.episodeDone
+          ? 'Episode finished!'
+          : `Action taken (${game.actions.find((gameAction) => gameAction.action === action)?.label.replace(/ \(.\)/g, '')})`
+      );
       await render(instanceId);
     } catch (error) {
       console.error('Error taking action:', error);
@@ -67,7 +74,7 @@ function Page() {
 
   useEffect(() => {
     create();
-  }, [selectedEnv]);
+  }, [game]);
 
   useEffect(() => {
     const handleKeyDown = async (event: KeyboardEvent) => {
@@ -77,10 +84,8 @@ function Page() {
 
       if (isDone) return;
 
-      const keyMappings = GAMES.find((game) => game.name === selectedEnv)?.actions ?? [];
-
-      for (const keyMapping of keyMappings) {
-        if (event.key === keyMapping.key) await action(keyMapping.action);
+      for (const gameAction of game.actions) {
+        if (gameAction.key && event.key === gameAction.key) await action(gameAction.action);
       }
     };
 
@@ -88,79 +93,68 @@ function Page() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [instanceId, isDone, selectedEnv, reward]);
+  }, [instanceId, isDone, game, reward]);
 
   return (
-    <div className="flex gap-2 m-2">
-      <div className="flex flex-col gap-2 w-2/5">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-lg">
-            <b>
-              {selectedEnv
+    <div>
+      <div className="flex gap-2 m-2">
+        <Card className="flex flex-col gap-2 w-2/5 p-1">
+          <CardHeader className="flex flex-col items-center gap-2">
+            <CardTitle className="text-3xl text-bold">
+              {game.name
+                .replace(/ALE\//g, '')
                 .replace(/-v\d+/g, '')
                 .replace(/([A-Z])/g, ' $1')
                 .trim()}
-            </b>
-          </h1>
-          <p>{statusMessage}</p>
+            </CardTitle>
+            <CardDescription>{statusMessage}</CardDescription>
+            <CardAction className="flex w-full justify-center">
+              <Button
+                className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-600"
+                onClick={() => reset(instanceId as number)}
+              >
+                Reset Environment (Enter)
+              </Button>
+            </CardAction>
+          </CardHeader>
           <div>
-            <Button
-              className="bg-green-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-green-600"
-              onClick={() => reset(instanceId as number)}
-            >
-              Reset Environment (Enter)
-            </Button>
+            {observation && (
+              <div
+                className={cn('grid gap-2', game.twoActionColumns ? 'grid-cols-2' : 'grid-cols-3')}
+              >
+                {game.actions.map((gameAction) => (
+                  <Button
+                    key={gameAction.action}
+                    className={cn(
+                      'py-2 px-4 rounded-md',
+                      gameAction.key ? 'bg-blue-500 text-white' : 'bg-primary'
+                    )}
+                    onClick={() => action(gameAction.action)}
+                  >
+                    {gameAction.label}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-        <div>
-          {observation && (
-            <div className="flex flex-col gap-2">
-              <div className="border">
-                <h2>
-                  <b>Current State:</b>
-                </h2>
-                <div>
-                  {GAMES.find((game) => game.name === selectedEnv)?.observations.map(
-                    (label, index) => (
-                      <div key={index} className="flex justify-between gap-2">
-                        <p>{`${label}:`}</p>
-                        <p>{observation[index]}</p>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <h3>
-                  <b>Reward:</b> {reward}
-                </h3>
-                <div className="flex gap-2">
-                  {GAMES.find((game) => game.name === selectedEnv)
-                    ?.actions.map((action) => action.label)
-                    .map((label, index) => (
-                      <Button
-                        key={index}
-                        className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600"
-                        onClick={() => action(index)}
-                      >
-                        {label}
-                      </Button>
-                    ))}
-                </div>
-              </div>
-            </div>
+        </Card>
+        <Card className="p-2 w-3/5 flex items-center">
+          {renderedImage && (
+            <img
+              src={`data:image/png;base64,${renderedImage}`}
+              alt={game.name}
+              className="border border-2"
+              width={300}
+            />
           )}
-        </div>
+        </Card>
       </div>
-      <div>
-        {renderedImage && (
-          <img
-            src={`data:image/png;base64,${renderedImage}`}
-            alt={selectedEnv}
-            className="border border-2"
-          />
-        )}
-      </div>
+      <Card className="gap-0 p-1 text-center border">
+        <CardHeader>
+          <CardTitle className="text-lg font-bold">Instructions</CardTitle>
+          <CardDescription>{game.description}</CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 }
