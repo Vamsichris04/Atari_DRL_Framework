@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import gymnasium as gym
+import ale_py
 import uuid
 import io
 import base64
@@ -13,7 +14,7 @@ from PIL import Image
 # python -m venv venv
 # venv\Scripts\activate
 # pip install fastapi uvicorn gymnasium pillow
-# pip install "gymnasium[classic-control]"
+# pip install "gymnasium[atari]"
 
 # Run the following command to run:
 # uvicorn gym_server:app --reload

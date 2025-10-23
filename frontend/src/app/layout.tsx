@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <DataProvider>
-          <div className="w-full">{children}</div>
+          <div className="w-full mb-14 p-2">{children}</div>
           <Navigation />
         </DataProvider>
       </body>
