@@ -28,4 +28,4 @@
 	python drl-game/trainer/trainer.py drl-game/configs/breakout_dqn.yaml
 	```
 
-TensorBoard logs will land in `drl-game/runs/<run_name>` and checkpoints in `drl-game/models/<run_name>`.
+TensorBoard logs will land in `drl-game/data/runs/<run_name>` and checkpoints in `drl-game/data/models/<run_name>`.
