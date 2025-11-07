@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { HomeIcon, MoveRight } from 'lucide-react';
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { ROUTES } from '@/constants/constants';
+import { ROUTES } from '@/constants';
 
 export function Navigation() {
   const router = useRouter();

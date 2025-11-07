@@ -1,23 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useData } from '@/providers/data';
-import { GAMES } from '@/constants/constants';
+import { GAMES } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { createEnvironment, fetchRender, resetEnvironment, takeAction } from '@/api/api';
 import { cn } from '@/lib/utils';
-import { Game } from '@/types/types';
+import { Game } from '@/types';
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
 
 function Page() {
-  const { inputData } = useData();
+  const router = useRouter();
+  const { inputData, setInputValue } = useData();
   const game: Game = GAMES.find((game) => game.name === inputData.game) as Game;
   const [instanceId, setInstanceId] = useState<number | null>(null);
-  const [observation, setObservation] = useState<number[] | null>(null);
-  const [reward, setReward] = useState(0);
-  const [isDone, setIsDone] = useState(false);
+  const reward = useRef(0);
   const [statusMessage, setStatusMessage] = useState('Loading...');
   const [renderedImage, setRenderedImage] = useState<string | null>(null);
+  const GAME_FINISHED_MESSAGE = 'Episode finished!';
 
   async function create() {
     try {
@@ -32,12 +33,9 @@ function Page() {
 
   async function reset(id: number) {
     try {
-      const observation = await resetEnvironment(id);
-      setObservation(observation);
-      setReward(0);
-      setIsDone(false);
-      setStatusMessage('Environment reset. Take an action.');
-      await render(id);
+      await resetEnvironment(id);
+      reward.current = 0;
+      await render(id, 'Environment reset. Take an action.');
     } catch (error) {
       console.error('Error resetting environment:', error);
       setStatusMessage('Error resetting environment.');
@@ -45,28 +43,26 @@ function Page() {
   }
 
   async function action(action: number) {
-    if (!instanceId || isDone) return;
+    if (!instanceId || statusMessage == GAME_FINISHED_MESSAGE) return;
     try {
       const data = await takeAction(instanceId, action);
-      setObservation(data.observation);
-      setReward(data.reward === 0 ? 0 : reward + data.reward);
-      setIsDone(data.episodeDone);
-      setStatusMessage(
+      reward.current += data.reward;
+      await render(
+        instanceId,
         data.episodeDone
-          ? 'Episode finished!'
-          : `Action taken (${game.actions.find((gameAction) => gameAction.action === action)?.label.replace(/ \(.\)/g, '')})`
+          ? GAME_FINISHED_MESSAGE
+          : `Action taken: ${game.actions.find((gameAction) => gameAction.action === action)?.label.replace(/ \(.\)/g, '')}`
       );
-      await render(instanceId);
     } catch (error) {
       console.error('Error taking action:', error);
       setStatusMessage('Error taking action.');
     }
   }
 
-  async function render(id: number) {
+  async function render(id: number, newStatusMessage: string) {
     try {
-      const image = await fetchRender(id);
-      setRenderedImage(image);
+      setRenderedImage(await fetchRender(id));
+      setStatusMessage(newStatusMessage);
     } catch (error) {
       console.error('Error fetching render:', error);
     }
@@ -82,7 +78,7 @@ function Page() {
 
       if (event.key === 'Enter') await reset(instanceId as number);
 
-      if (isDone) return;
+      if (statusMessage == GAME_FINISHED_MESSAGE) return;
 
       for (const gameAction of game.actions) {
         if (gameAction.key && event.key === gameAction.key) await action(gameAction.action);
@@ -93,7 +89,7 @@ function Page() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [instanceId, isDone, game, reward]);
+  }, [instanceId, statusMessage, game, reward]);
 
   return (
     <div>
@@ -118,27 +114,25 @@ function Page() {
             </CardAction>
           </CardHeader>
           <div>
-            {observation && (
-              <div
-                className={cn('grid gap-2', game.twoActionColumns ? 'grid-cols-2' : 'grid-cols-3')}
-              >
-                {game.actions.map((gameAction) => (
-                  <Button
-                    key={gameAction.action}
-                    className={cn(
-                      'py-2 px-4 rounded-md',
-                      gameAction.key ? 'bg-blue-500 text-white' : 'bg-primary'
-                    )}
-                    onClick={() => action(gameAction.action)}
-                  >
-                    {gameAction.label}
-                  </Button>
-                ))}
-              </div>
-            )}
+            <div
+              className={cn('grid gap-2', game.twoActionColumns ? 'grid-cols-2' : 'grid-cols-3')}
+            >
+              {game.actions.map((gameAction) => (
+                <Button
+                  key={gameAction.action}
+                  className={cn(
+                    'py-2 px-4 rounded-md',
+                    gameAction.key ? 'bg-blue-500 text-white' : 'bg-primary'
+                  )}
+                  onClick={() => action(gameAction.action)}
+                >
+                  {gameAction.label}
+                </Button>
+              ))}
+            </div>
           </div>
         </Card>
-        <Card className="p-2 w-3/5 flex items-center">
+        <Card className="p-2 w-2/5 flex items-center">
           {renderedImage && (
             <img
               src={`data:image/png;base64,${renderedImage}`}
@@ -147,6 +141,19 @@ function Page() {
               width={300}
             />
           )}
+        </Card>
+        <Card className="w-1/5 flex justify-center items-center">
+          <CardTitle className="w-fit">{`${statusMessage !== GAME_FINISHED_MESSAGE ? 'Current score' : 'Final result'}: ${reward.current}`}</CardTitle>
+          <Button
+            onClick={() => {
+              if (statusMessage === GAME_FINISHED_MESSAGE) {
+                setInputValue('userResult', '' + reward.current);
+              }
+              router.push('/configure');
+            }}
+          >
+            {statusMessage !== GAME_FINISHED_MESSAGE ? 'Skip to Agent' : 'Continue to Agent'}
+          </Button>
         </Card>
       </div>
       <Card className="gap-0 p-1 text-center border">

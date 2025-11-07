@@ -1,11 +1,9 @@
-import { Game, InputDataType, OutputDataType } from '@/types/types';
-import breakout from '../images/breakout.gif';
-import seaquest from '../images/seaquest.gif';
-import pong from '../images/pong.gif';
-import beam_rider from '../images/beam_rider.gif';
-import space_invaders from '../images/space_invaders.gif';
-
-export const API_URL = 'http://localhost:8000/v1';
+import { Game } from '@/types';
+import breakout from '@/images/breakout.gif';
+import seaquest from '@/images/seaquest.gif';
+import pong from '@/images/pong.gif';
+import beam_rider from '@/images/beam_rider.gif';
+import space_invaders from '@/images/space_invaders.gif';
 
 export const GAMES: Game[] = [
   {
@@ -245,36 +243,5 @@ export const GAMES: Game[] = [
       },
     ],
     twoActionColumns: true,
-  },
-];
-
-export const DefaultInputValues: InputDataType = {
-  game: GAMES[0].name,
-};
-
-export const DefaultOutputValues: OutputDataType = {
-  game: '',
-};
-
-export const ROUTES = [
-  {
-    route: '/',
-    text: 'Home',
-  },
-  {
-    route: '/select',
-    text: 'Select a Game',
-  },
-  {
-    route: '/play',
-    text: 'Play the Game',
-  },
-  {
-    route: 'configure',
-    text: 'Configure the Agent',
-  },
-  {
-    route: '/results',
-    text: 'See the Results',
   },
 ];
