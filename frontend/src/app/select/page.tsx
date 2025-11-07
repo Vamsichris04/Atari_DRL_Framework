@@ -2,7 +2,7 @@
 import { useData } from '@/providers/data';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { GAMES } from '@/constants/constants';
+import { GAMES } from '@/constants';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 

@@ -1,0 +1,58 @@
+import { Configuration } from '@/types';
+
+export const CONFIGURATIONS: Configuration[] = [
+  {
+    game: 'ALE/Breakout-v5',
+    algorithm: 'DQN',
+    parameters: {
+      learning_rate: 1.0e-4,
+      buffer_size: 250_000,
+      learning_starts: 5000,
+      batch_size: 32,
+      gamma: 0.99,
+      train_freq: 4,
+      target_update_interval: 10000,
+      exploration_fraction: 0.2,
+      exploration_final_eps: 0.01,
+    },
+  },
+  {
+    game: 'ALE/Breakout-v5',
+    algorithm: 'Rainbow',
+    parameters: {
+      learning_rate: 1.0e-4,
+      buffer_size: 250_000,
+      learning_starts: 5000,
+      batch_size: 32,
+      gamma: 0.99,
+      train_freq: 4,
+      target_update_interval: 10000,
+      n_step: 3,
+      use_noisy_net: true,
+      noisy_net_sigma: 0.5,
+      prioritized_replay: true,
+      prioritized_replay_alpha: 0.6,
+      prioritized_replay_beta: 0.4,
+      prioritized_replay_eps: 1e-6,
+      atom_size: 51,
+      v_min: -10,
+      v_max: 10,
+    },
+  },
+  {
+    game: 'ALE/Breakout-v5',
+    algorithm: 'PPO',
+    parameters: {
+      learning_rate: 2.5e-4,
+      n_steps: 128,
+      batch_size: 64,
+      n_epochs: 4,
+      gamma: 0.99,
+      gae_lambda: 0.95,
+      clip_range: 0.2,
+      ent_coef: 0.01,
+      vf_coef: 0.5,
+      max_grad_norm: 0.5,
+    },
+  },
+];

@@ -1,4 +1,4 @@
-import { API_URL } from '@/constants/constants';
+import { API_URL } from '@/constants';
 
 export async function createEnvironment(environment: string) {
   const response = await fetch(`${API_URL}/envs/`, {

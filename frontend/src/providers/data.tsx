@@ -1,8 +1,8 @@
 'use client';
 
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { DataContextType, InputDataType, OutputDataType } from '@/types/types';
-import { DefaultInputValues, DefaultOutputValues } from '@/constants/constants';
+import { DataContextType, InputDataType, OutputDataType } from '@/types';
+import { DefaultInputValues, DefaultOutputValues } from '@/constants';
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
