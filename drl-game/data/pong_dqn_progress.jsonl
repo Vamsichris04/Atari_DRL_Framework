@@ -1,0 +1,5 @@
+{"timesteps": 1000, "exploration_rate": 0.01}
+{"timesteps": 2000, "exploration_rate": 0.01}
+{"timesteps": 3000, "exploration_rate": 0.01}
+{"timesteps": 4000, "exploration_rate": 0.01}
+{"timesteps": 5000, "exploration_rate": 0.01}

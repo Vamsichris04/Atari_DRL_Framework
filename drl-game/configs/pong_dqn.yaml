@@ -1,25 +1,26 @@
 # Pong - Classic table tennis (one of the simplest Atari games)
 # Fast to train, good for testing and debugging
+
 run_name: pong_dqn_v0
 env_id: ALE/Pong-v5
 seed: 42
-total_timesteps: 500_000         # Pong learns quickly
+total_timesteps: 5_000         
 
 # where to save things
-log_dir: drl-game/runs/pong_dqn_v0
-save_dir: drl-game/models/pong_dqn_v0
+log_dir: drl-game/data/runs/pong_dqn_v0
+save_dir: drl-game/data/models/pong_dqn_v0
 
 # DQN hyperparams - optimized for fast learning on simple game
 dqn:
   learning_rate: 1.0e-4
   buffer_size: 100_000           # Small buffer is sufficient for Pong
-  learning_starts: 5_000         # Quick warmup
   batch_size: 32
   gamma: 0.99
   train_freq: 4
   target_update_interval: 10_000
   exploration_fraction: 0.1      # Short exploration (game is simple)
   exploration_final_eps: 0.01
+
 
 # evaluation during training
 eval:

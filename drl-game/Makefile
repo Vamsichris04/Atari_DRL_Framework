@@ -19,4 +19,4 @@ runs:
 
 # Launch TensorBoard to visualize logs
 tb:
-	tensorboard --logdir=runs --port=6006
+	tensorboard --logdir=/drl-game/data/runs --port=6006
