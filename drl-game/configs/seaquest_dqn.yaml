@@ -3,7 +3,7 @@
 run_name: seaquest_dqn_v0
 env_id: ALE/Seaquest-v5
 seed: 42
-total_timesteps: 2_000_000       # Complex multi-objective game needs longest training
+total_timesteps: 2_000_000       # Complex multi-objective game needs extended training
 
 # where to save things
 log_dir: drl-game/runs/seaquest_dqn_v0
