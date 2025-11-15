@@ -8,19 +8,19 @@ type GameName =
   | 'ALE/SpaceInvaders-v5';
 
 export interface InputDataType {
-  game: GameName;
+  game: GameName | undefined;
   userResult: string | undefined;
   configuration: Configuration | undefined;
 }
 
 export interface OutputDataType {
-  game: GameName;
+  game: GameName | undefined;
 }
 
 export interface DataContextType {
   inputData: InputDataType;
   outputData: OutputDataType;
-  setInputValue: (parameter: string, value: string) => void;
+  setInputValue: (parameter: string, value: string | Configuration) => void;
   setOutputData: (outputData: OutputDataType) => void;
 }
 
