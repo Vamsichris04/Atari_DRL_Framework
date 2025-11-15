@@ -69,8 +69,12 @@ function Page() {
   }
 
   useEffect(() => {
-    create();
-  }, [game]);
+    if (!game) {
+      router.push('/select');
+    } else {
+      create();
+    }
+  }, [game, router]);
 
   useEffect(() => {
     const handleKeyDown = async (event: KeyboardEvent) => {
@@ -90,6 +94,10 @@ function Page() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [instanceId, statusMessage, game, reward]);
+
+  if (!game) {
+    return <></>;
+  }
 
   return (
     <div>

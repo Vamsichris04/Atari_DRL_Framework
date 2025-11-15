@@ -1,16 +1,15 @@
 import { InputDataType, OutputDataType } from '@/types';
-import { GAMES } from '@/constants/games';
 
 export const API_URL = 'http://localhost:8000/v1';
 
 export const DefaultInputValues: InputDataType = {
-  game: GAMES[0].name,
+  game: undefined,
   userResult: undefined,
   configuration: undefined,
 };
 
 export const DefaultOutputValues: OutputDataType = {
-  game: GAMES[0].name,
+  game: undefined,
 };
 
 export const ROUTES = [

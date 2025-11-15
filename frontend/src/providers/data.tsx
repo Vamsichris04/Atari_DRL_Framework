@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { DataContextType, InputDataType, OutputDataType } from '@/types';
+import { Configuration, DataContextType, InputDataType, OutputDataType } from '@/types';
 import { DefaultInputValues, DefaultOutputValues } from '@/constants';
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -10,7 +10,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [inputData, setInputData] = useState<InputDataType>(DefaultInputValues);
   const [outputData, setOutputData] = useState<OutputDataType>(DefaultOutputValues);
 
-  const setInputValue = (parameter: string, value: string) => {
+  const setInputValue = (parameter: string, value: string | Configuration) => {
     setInputData((existingData) => ({
       ...existingData,
       [parameter]: value,
