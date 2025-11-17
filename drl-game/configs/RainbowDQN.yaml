@@ -104,6 +104,26 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Atlantis2:
+    run_name: atlantis2_rainbow_v0
+    env_id: ALE/Atlantis2-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/atlantis2_rainbow_v0
+    save_dir: drl-game/models/atlanti2s_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Backgammon:
+    run_name: backgammon_rainbow_v0
+    env_id: ALE/Backgammon-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/backgammon_rainbow_v0
+    save_dir: drl-game/models/backgammon_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   BankHeist:
     run_name: bankheist_rainbow_v0
     env_id: ALE/BankHeist-v5
@@ -111,6 +131,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/bankheist_rainbow_v0
     save_dir: drl-game/models/bankheist_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  BasicMath:
+    run_name: basicmath_rainbow_v0
+    env_id: ALE/BasicMath-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/basicmath_rainbow_v0
+    save_dir: drl-game/models/basicmath_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -141,6 +171,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/berzerk_rainbow_v0
     save_dir: drl-game/models/berzerk_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Blackjack:
+    run_name: Blackjack_rainbow_v0
+    env_id: ALE/Blackjack-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/blackjack_rainbow_v0
+    save_dir: drl-game/models/blackjack_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -184,6 +224,16 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Casino:
+    run_name: casino_rainbow_v0
+    env_id: ALE/Casino-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/casino_rainbow_v0
+    save_dir: drl-game/models/casino_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Centipede:
     run_name: centipede_rainbow_v0
     env_id: ALE/Centipede-v5
@@ -214,6 +264,26 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Crossbow:
+    run_name: crossbow_rainbow_v0
+    env_id: ALE/Crossbow-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/crossbow_rainbow_v0
+    save_dir: drl-game/models/crossbow_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Darkchambers:
+    run_name: darkchambers_rainbow_v0
+    env_id: ALE/Atlantis-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/darkchambers_rainbow_v0
+    save_dir: drl-game/models/darkchambers_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Defender:
     run_name: defender_rainbow_v0
     env_id: ALE/Defender-v5
@@ -234,6 +304,16 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  DonkeyKong:
+    run_name: donkeykong_rainbow_v0
+    env_id: ALE/DonkeyKong-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/donkeykong_rainbow_v0
+    save_dir: drl-game/models/donkeykong_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   DoubleDunk:
     run_name: doubledunk_rainbow_v0
     env_id: ALE/DoubleDunk-v5
@@ -241,6 +321,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/doubledunk_rainbow_v0
     save_dir: drl-game/models/doubledunk_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Earthworld:
+    run_name: Earthworld_rainbow_v0
+    env_id: ALE/Earthworld-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/earthworld_rainbow_v0
+    save_dir: drl-game/models/earthworld_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -264,6 +354,26 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Entombed:
+    run_name: entombed_rainbow_v0
+    env_id: ALE/Entombed-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/entombeds_rainbow_v0
+    save_dir: drl-game/models/entombed_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Et:
+    run_name: et_rainbow_v0
+    env_id: ALE/Et-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/et_rainbow_v0
+    save_dir: drl-game/models/et_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   FishingDerby:
     run_name: fishingderby_rainbow_v0
     env_id: ALE/FishingDerby-v5
@@ -271,6 +381,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/fishingderby_rainbow_v0
     save_dir: drl-game/models/fishingderby_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  FlagCapture:
+    run_name: flagcapture_rainbow_v0
+    env_id: ALE/FlagCapture-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/flagcapture_rainbow_v0
+    save_dir: drl-game/models/flagcapture_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -284,6 +404,16 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Frogger:
+    run_name: frogger_rainbow_v0
+    env_id: ALE/Frogger-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/frogger_rainbow_v0
+    save_dir: drl-game/models/frogger_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Frostbite:
     run_name: frostbite_rainbow_v0
     env_id: ALE/Frostbite-v5
@@ -291,6 +421,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/frostbite_rainbow_v0
     save_dir: drl-game/models/frostbite_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Galaxian:
+    run_name: galaxian_rainbow_v0
+    env_id: ALE/Galaxian-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/galaxian_rainbow_v0
+    save_dir: drl-game/models/galaxian_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -314,6 +454,26 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Hangman:
+    run_name: hangman_rainbow_v0
+    env_id: ALE/Hangman-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/hangman_rainbow_v0
+    save_dir: drl-game/models/hangman_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  HauntedHouse:
+    run_name: hauntedhouse_rainbow_v0
+    env_id: ALE/HauntedHouse-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/hauntedhouse_rainbow_v0
+    save_dir: drl-game/models/hauntedhouse_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Hero:
     run_name: hero_rainbow_v0
     env_id: ALE/Hero-v5
@@ -321,6 +481,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/hero_rainbow_v0
     save_dir: drl-game/models/hero_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  HumanCannonball:
+    run_name: humancannonball_rainbow_v0
+    env_id: ALE/HumanCannonball-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/humancannonball_rainbow_v0
+    save_dir: drl-game/models/humancannonball_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -354,6 +524,16 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Kaboom:
+    run_name: kaboom_rainbow_v0
+    env_id: ALE/Kaboom-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/kaboom_rainbow_v0
+    save_dir: drl-game/models/kaboom_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Kangaroo:
     run_name: kangaroo_rainbow_v0
     env_id: ALE/Kangaroo-v5
@@ -361,6 +541,46 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/kangaroo_rainbow_v0
     save_dir: drl-game/models/kangaroo_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  KeystoneKapers:
+    run_name: keystonekapers_rainbow_v0
+    env_id: ALE/KeystoneKapers-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/keystonekapers_rainbow_v0
+    save_dir: drl-game/models/keystonekapers_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  KingKong:
+    run_name: kingkong_rainbow_v0
+    env_id: ALE/KingKong-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/kingkong_rainbow_v0
+    save_dir: drl-game/models/kingkong_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Klax:
+    run_name: klax_rainbow_v0
+    env_id: ALE/Klax-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/klax_rainbow_v0
+    save_dir: drl-game/models/klax_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Koolaid:
+    run_name: koolaid_rainbow_v0
+    env_id: ALE/Koolaid-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/koolaid_rainbow_v0
+    save_dir: drl-game/models/koolaid_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -384,6 +604,46 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  LaserGates:
+    run_name: lasergates_rainbow_v0
+    env_id: ALE/LaserGates-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/lasergates_rainbow_v0
+    save_dir: drl-game/models/lasergates_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  LostLuggage:
+    run_name: lostluggage_rainbow_v0
+    env_id: ALE/LostLuggage-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/lostluggage_rainbow_v0
+    save_dir: drl-game/models/lostluggage_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  MarioBros:
+    run_name: mariobros_rainbow_v0
+    env_id: ALE/MarioBros-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/mariobros_rainbow_v0
+    save_dir: drl-game/models/mariobros_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  MinatureGolf:
+    run_name: minaturegolf_rainbow_v0
+    env_id: ALE/MinatureGolf-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/minaturegolf_rainbow_v0
+    save_dir: drl-game/models/minaturegolf_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   MontezumaRevenge:
     run_name: montezumarevenge_rainbow_v0
     env_id: ALE/MontezumaRevenge-v5
@@ -391,6 +651,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/montezumarevenge_rainbow_v0
     save_dir: drl-game/models/montezumarevenge_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  MrDo:
+    run_name: mrdo_rainbow_v0
+    env_id: ALE/MrDo-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/mrdo_rainbow_v0
+    save_dir: drl-game/models/mrdo_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -414,6 +684,26 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Othello:
+    run_name: othello_rainbow_v0
+    env_id: ALE/Othello-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/othello_rainbow_v0
+    save_dir: drl-game/models/othello_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Pacman:
+    run_name: pacman_rainbow_v0
+    env_id: ALE/Pacman-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/pacman_rainbow_v0
+    save_dir: drl-game/models/pacman_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Phoenix:
     run_name: phoenix_rainbow_v0
     env_id: ALE/Phoenix-v5
@@ -431,6 +721,16 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/pitfall_rainbow_v0
     save_dir: drl-game/models/pitfall_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Pitfall2:
+    run_name: pitfall2_rainbow_v0
+    env_id: ALE/Pitfall2-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/pitfall2_rainbow_v0
+    save_dir: drl-game/models/pitfall2_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -514,6 +814,16 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  SirLancelot:
+    run_name: sirlancelot_rainbow_v0
+    env_id: ALE/SirLancelot-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/sirlancelot_rainbow_v0
+    save_dir: drl-game/models/sirlancelot_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   Skiing:
     run_name: skiing_rainbow_v0
     env_id: ALE/Skiing-v5
@@ -544,6 +854,16 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  SpaceWar:
+    run_name: spacewars_rainbow_v0
+    env_id: ALE/SpaceWar-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/spacewar_rainbow_v0
+    save_dir: drl-game/models/spacewar_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   StarGunner:
     run_name: stargunner_rainbow_v0
     env_id: ALE/StarGunner-v5
@@ -551,6 +871,26 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/stargunner_rainbow_v0
     save_dir: drl-game/models/stargunner_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Superman:
+    run_name: superman_rainbow_v0
+    env_id: ALE/Superman-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/superman_rainbow_v0
+    save_dir: drl-game/models/superman_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Surround:
+    run_name: surround_rainbow_v0
+    env_id: ALE/Surround-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/surround_rainbow_v0
+    save_dir: drl-game/models/surround_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -564,6 +904,26 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  Tetris:
+    run_name: tetris_rainbow_v0
+    env_id: ALE/Tetris-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/tetris_rainbow_v0
+    save_dir: drl-game/models/tetris_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  TicTacToe3D:
+    run_name: tictactoe3d_rainbow_v0
+    env_id: ALE/TicTacToe3D-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/tictactoe3d_rainbow_v0
+    save_dir: drl-game/models/tictactoe3d_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   TimePilot:
     run_name: timepilot_rainbow_v0
     env_id: ALE/TimePilot-v5
@@ -571,6 +931,26 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/timepilot_rainbow_v0
     save_dir: drl-game/models/timepilot_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Trondead:
+    run_name: trondead_rainbow_v0
+    env_id: ALE/TronDead-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/trondead_rainbow_v0
+    save_dir: drl-game/models/trondead_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  Turmoil:
+    run_name: turmoil_rainbow_v0
+    env_id: ALE/Turmoil-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/turmoil_rainbow_v0
+    save_dir: drl-game/models/turmoil_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
@@ -604,6 +984,36 @@ configs:
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
+  VideoCheckers:
+    run_name: videocheckers_rainbow_v0
+    env_id: ALE/VideoCheckers-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/videocheckers_rainbow_v0
+    save_dir: drl-game/models/videocheckers_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  VideoChess:
+    run_name: videochess_rainbow_v0
+    env_id: ALE/VideoChess-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/videochess_rainbow_v0
+    save_dir: drl-game/models/videochess_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  VideoCube:
+    run_name: videocube_rainbow_v0
+    env_id: ALE/VideoCube-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/videocube_rainbow_v0
+    save_dir: drl-game/models/videocube_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
   VideoPinball:
     run_name: videopinball_rainbow_v0
     env_id: ALE/VideoPinball-v5
@@ -621,6 +1031,26 @@ configs:
     total_timesteps: 1000000
     log_dir: drl-game/runs/wizardofwor_rainbow_v0
     save_dir: drl-game/models/wizardofwor_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  WorldZapper:
+    run_name: worldzapper_rainbow_v0
+    env_id: ALE/WorldZapper-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/worldzapper_rainbow_v0
+    save_dir: drl-game/models/worldzapper_rainbow_v0
+    rainbow: *rainbow_defaults
+    eval: *eval_defaults
+
+  YarsRevenge:
+    run_name: yarsrevenge_rainbow_v0
+    env_id: ALE/YarsRevenge-v5
+    seed: 42
+    total_timesteps: 1000000
+    log_dir: drl-game/runs/yarsrevenge_rainbow_v0
+    save_dir: drl-game/models/yarsrevenge_rainbow_v0
     rainbow: *rainbow_defaults
     eval: *eval_defaults
 
