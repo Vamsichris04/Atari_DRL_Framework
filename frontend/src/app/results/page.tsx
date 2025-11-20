@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <div>
       <p>Results Page</p>
-      <p>{JSON.stringify(inputData.configuration)}</p>
+      <p>{JSON.stringify(inputData.parameters)}</p>
     </div>
   );
 }

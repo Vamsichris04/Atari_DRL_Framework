@@ -32,11 +32,11 @@ export default function Page() {
                 key={game.name}
                 onClick={() => {
                   setInputValue('game', game.name);
-                  router.push('/play');
+                  router.push('/algorithm');
                 }}
                 className="w-full"
               >
-                Play
+                Select
               </Button>
             </CardFooter>
           </Card>
