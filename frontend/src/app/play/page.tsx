@@ -157,10 +157,12 @@ function Page() {
               if (statusMessage === GAME_FINISHED_MESSAGE) {
                 setInputValue('userResult', '' + reward.current);
               }
-              router.push('/configure');
+              router.push('/results');
             }}
           >
-            {statusMessage !== GAME_FINISHED_MESSAGE ? 'Skip to Agent' : 'Continue to Agent'}
+            {statusMessage !== GAME_FINISHED_MESSAGE
+              ? 'Skip to Agent Results'
+              : 'Continue to Results'}
           </Button>
         </Card>
       </div>

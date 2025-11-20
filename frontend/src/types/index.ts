@@ -7,10 +7,13 @@ type GameName =
   | 'ALE/BeamRider-v5'
   | 'ALE/SpaceInvaders-v5';
 
+export type Parameters = DQNParameters | RainbowParameters | PPOParameters;
+
 export interface InputDataType {
   game: GameName | undefined;
+  algorithm: Algorithm | undefined;
+  parameters: Parameters | undefined;
   userResult: string | undefined;
-  configuration: Configuration | undefined;
 }
 
 export interface OutputDataType {
@@ -20,7 +23,7 @@ export interface OutputDataType {
 export interface DataContextType {
   inputData: InputDataType;
   outputData: OutputDataType;
-  setInputValue: (parameter: string, value: string | Configuration) => void;
+  setInputValue: (parameter: keyof InputDataType, value: string | Parameters) => void;
   setOutputData: (outputData: OutputDataType) => void;
 }
 
@@ -36,7 +39,7 @@ export interface Game {
   twoActionColumns?: boolean;
 }
 
-type Algorithm = 'DQN' | 'Rainbow' | 'PPO';
+export type Algorithm = 'DQN' | 'Rainbow' | 'PPO';
 
 interface DQNParameters {
   learning_rate: number;
@@ -83,31 +86,14 @@ interface PPOParameters {
   max_grad_norm: number;
 }
 
-interface ConfigurationBase {
-  game: GameName;
-  algorithm: Algorithm;
-  parameters: DQNParameters | RainbowParameters | PPOParameters;
-}
-
-interface DQNConfiguration extends ConfigurationBase {
-  algorithm: 'DQN';
-  parameters: DQNParameters;
-}
-
-interface RainbowConfiguration extends ConfigurationBase {
-  algorithm: 'Rainbow';
-  parameters: RainbowParameters;
-}
-
-interface PPOConfiguration extends ConfigurationBase {
-  algorithm: 'PPO';
-  parameters: PPOParameters;
-}
-
-export type Configuration = DQNConfiguration | RainbowConfiguration | PPOConfiguration;
-
 export type Parameter = {
-  key: keyof DQNParameters | keyof RainbowParameters | keyof PPOParameters;
+  algorithms: Algorithm[];
+  key: ParameterKeys;
   title: string;
   description: string;
+  isBoolean?: boolean;
+  max?: number;
+  min?: number;
 };
+
+export type ParameterKeys = keyof DQNParameters | keyof RainbowParameters | keyof PPOParameters;

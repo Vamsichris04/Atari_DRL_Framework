@@ -4,8 +4,9 @@ export const API_URL = 'http://localhost:8000/v1';
 
 export const DefaultInputValues: InputDataType = {
   game: undefined,
+  algorithm: undefined,
+  parameters: undefined,
   userResult: undefined,
-  configuration: undefined,
 };
 
 export const DefaultOutputValues: OutputDataType = {
@@ -22,12 +23,16 @@ export const ROUTES = [
     text: 'Select a Game',
   },
   {
-    route: '/play',
-    text: 'Play the Game',
+    route: '/algorithm',
+    text: 'Select an Algorithm',
   },
   {
     route: '/configure',
     text: 'Configure the Agent',
+  },
+  {
+    route: '/play',
+    text: 'Play the Game',
   },
   {
     route: '/results',
@@ -36,5 +41,4 @@ export const ROUTES = [
 ];
 
 export * from './configurationParameters';
-export * from './configurations';
 export * from './games';
