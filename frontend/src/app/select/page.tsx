@@ -21,6 +21,7 @@ export default function Page() {
                   .replace(/ALE\//g, '')
                   .replace(/-v\d+/g, '')
                   .replace(/([A-Z])/g, ' $1')
+                  .replace('Tic Tac Toe3 D', 'Tic Tac Toe 3D')
                   .trim()}
               </CardTitle>
             </CardHeader>
