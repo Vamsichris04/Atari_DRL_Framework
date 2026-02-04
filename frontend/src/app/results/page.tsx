@@ -136,7 +136,7 @@ export default function Page() {
                     onClick={() => toggleSort(col)}
                   >
                     <div className="flex items-center gap-2">
-                      <span className="capitalize">{col}</span>
+                      <span className="capitalize">{col.replace(/_/g, ' ')}</span>
                       {sortKey === col && <span>{sortDir === 'asc' ? '▲' : '▼'}</span>}
                     </div>
                   </th>
