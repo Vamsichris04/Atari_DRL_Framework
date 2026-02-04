@@ -29,3 +29,8 @@
 	```
 
 TensorBoard logs will land in `drl-game/data/runs/<run_name>` and checkpoints in `drl-game/data/models/<run_name>`.
+
+
+You can visualize the training using tensorboard which will be hosted locally on port 6006, below is th command (Path may be different, adjust per your absolute path):
+
+tensorboard --logdir=drl-game/data/runs --port=6006 

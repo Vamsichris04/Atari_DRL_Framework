@@ -1,7 +1,8 @@
+# Breakout - Classic brick-breaking paddle game
 run_name: breakout_dqn_v0
-env_id: ALE/Breakout-v5          # Gymnasium Atari env id
+env_id: ALE/Breakout-v5
 seed: 42
-total_timesteps: 150000          # Total training timesteps
+total_timesteps: 1_000_000       # Increased for better convergence
 
 # where to save things
 log_dir: drl-game/runs/breakout_dqn_v0
@@ -9,15 +10,14 @@ save_dir: drl-game/models/breakout_dqn_v0
 
 # DQN hyperparams 
 dqn:
-
   learning_rate: 1.0e-4 
-  buffer_size: 100000  
+  buffer_size: 250_000           # Reduced from 1M to avoid memory warning
   learning_starts: 5000
   batch_size: 32
   gamma: 0.99
   train_freq: 4
   target_update_interval: 10000
-  exploration_fraction: 0.1
+  exploration_fraction: 0.2
   exploration_final_eps: 0.01
 
 # evaluation during training
