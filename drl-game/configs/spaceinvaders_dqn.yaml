@@ -1,0 +1,29 @@
+# Space Invaders - Classic fixed shooter with alien wave patterns
+# Requires timing and spatial positioning to dodge and shoot
+run_name: spaceinvaders_dqn_v0
+env_id: ALE/SpaceInvaders-v5
+seed: 42
+total_timesteps: 1_000_000       # Moderate training time for pattern learning
+
+# where to save things
+log_dir: drl-game/runs/spaceinvaders_dqn_v0
+save_dir: drl-game/models/spaceinvaders_dqn_v0
+
+# DQN hyperparams - tuned for classic shooter
+dqn:
+  learning_rate: 1.0e-4
+  buffer_size: 300_000           # Moderate buffer for wave patterns
+  learning_starts: 5_000         # Standard warmup
+  batch_size: 32
+  gamma: 0.99
+  train_freq: 4
+  target_update_interval: 10_000
+  exploration_fraction: 0.2      # Moderate exploration (patterns are repetitive)
+  exploration_final_eps: 0.01
+
+# evaluation during training
+eval:
+  enabled: true
+  freq: 20_000                   # Regular eval frequency
+  n_episodes: 5
+  deterministic: true

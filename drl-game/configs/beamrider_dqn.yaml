@@ -1,0 +1,29 @@
+# Beam Rider - Side-scrolling shooter with fast-paced action
+# Requires quick reactions and long-term planning for high scores
+run_name: beamrider_dqn_v0
+env_id: ALE/BeamRider-v5
+seed: 42
+total_timesteps: 1_000_000       # Beam Rider needs longer training than Breakout
+
+# where to save things
+log_dir: drl-game/runs/beamrider_dqn_v0
+save_dir: drl-game/models/beamrider_dqn_v0
+
+# DQN hyperparams - tuned for shooter game
+dqn:
+  learning_rate: 1.0e-4
+  buffer_size: 500_000           # Larger buffer for diverse shooting scenarios
+  learning_starts: 10_000        # More warmup for complex action patterns
+  batch_size: 32
+  gamma: 0.99
+  train_freq: 4
+  target_update_interval: 10_000
+  exploration_fraction: 0.3      # Longer exploration for enemy patterns
+  exploration_final_eps: 0.01
+
+# evaluation during training
+eval:
+  enabled: true
+  freq: 25_000                   # Less frequent eval (longer episodes)
+  n_episodes: 5
+  deterministic: true
