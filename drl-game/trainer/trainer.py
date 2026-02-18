@@ -8,25 +8,22 @@ from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack
 from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
 from stable_baselines3.common.monitor import Monitor
-
-def build_env(env_id: str, seed: int, n_envs: int = 1):
-    """
-    Create an Atari env with common wrappers and 4-frame stacking.
-    Works with Gymnasium Atari (ALE/<Game>-v5).
-    """
-    # make_atari_env adds Atari preprocessing + Monitor internally
-    venv = make_atari_env(env_id, n_envs=n_envs, seed=seed)
-    # stack 4 frames (DQN paper)
-    venv = VecFrameStack(venv, n_stack=4)
-    return venv
+try:
+    # When installed or run as module
+    from trainer.callbacks.json_logger import JSONLoggerCallback
+    from trainer.envs import build_env
+except Exception:
+    # When running trainer.py directly as a script
+    from callbacks.json_logger import JSONLoggerCallback
+    from envs import build_env
 
 def main(cfg_path: str):
     with open(cfg_path, "r") as f:
         cfg = yaml.safe_load(f)
 
     run_name = cfg.get("run_name", "run")
-    log_dir  = cfg.get("log_dir", f"drl-game/runs/{run_name}")
-    save_dir = cfg.get("save_dir", f"drl-game/models/{run_name}")
+    log_dir  = cfg.get("log_dir", f"drl-game/data/runs/{run_name}")
+    save_dir = cfg.get("save_dir", f"drl-game/data/models/{run_name}")
     os.makedirs(log_dir, exist_ok=True)
     os.makedirs(save_dir, exist_ok=True)
 
@@ -35,7 +32,6 @@ def main(cfg_path: str):
     total_timesteps = int(cfg.get("total_timesteps", 100_000))
     hp = cfg.get("dqn", {})
 
-    # Coerce numeric hyperparams (e.g. if given as strings in YAML)
     def _coerce_numeric(val):
         if isinstance(val, str):
             val_str = val.strip()
@@ -73,6 +69,19 @@ def main(cfg_path: str):
         save_replay_buffer=True
     )
     callbacks.append(ckpt_cb)
+
+    # JSON logging for frontend consumption: writes newline-delimited JSON records
+    json_freq = int(cfg.get("log_json_freq", 1000))
+    try:
+        env_short = env_id.split('/')[-1].split('-')[0].lower()
+    except Exception:
+        env_short = env_id.replace('/', '_').lower()
+    algo_short = 'dqn'
+    json_fname = f"{env_short}_{algo_short}_progress.jsonl"
+    # Saving progress files under drl-game/data/ 
+    json_path = os.path.join('drl-game', 'data', json_fname)
+    json_cb = JSONLoggerCallback(json_path, write_freq=json_freq)
+    callbacks.append(json_cb)
 
     # ================================= Model ========================================== #
     model = DQN(
