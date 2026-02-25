@@ -1,0 +1,29 @@
+# Breakout PPO
+# PPO with 8 parallel envs converges significantly faster on Breakout than DQN
+run_name: breakout_ppo_v0
+env_id: ALE/Breakout-v5
+seed: 42
+total_timesteps: 10_000_000    # PPO needs more env steps but uses them efficiently
+n_envs: 8                      # Parallel envs - core PPO advantage
+
+log_dir:  drl-game/data/runs/breakout_ppo_v0
+save_dir: drl-game/data/models/breakout_ppo_v0
+
+# PPO hyperparams (tuned for Atari Breakout)
+ppo:
+  learning_rate: 2.5e-4
+  n_steps: 128                 # Steps per env before each update (128 * 8 = 1024 per update)
+  batch_size: 256              # Minibatch size (must divide n_steps * n_envs evenly)
+  n_epochs: 4                  # Gradient passes per update
+  gamma: 0.99
+  gae_lambda: 0.95             # GAE smoothing factor
+  clip_range: 0.1              # PPO clipping parameter
+  ent_coef: 0.01               # Entropy bonus - keeps policy exploratory
+  vf_coef: 0.5                 # Value function loss weight
+  max_grad_norm: 0.5           # Gradient clipping
+
+eval:
+  enabled: true
+  freq: 100_000
+  n_episodes: 5
+  deterministic: true

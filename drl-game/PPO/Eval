@@ -1,0 +1,114 @@
+# drl-game/PPO/Eval.py
+import os, sys, argparse, yaml, numpy as np
+
+# ── Make imports work regardless of which directory you run from ──────────────
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+
+from stable_baselines3 import DQN, PPO
+from stable_baselines3.common.env_util import make_atari_env
+from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.monitor import Monitor
+import gymnasium as gym
+
+try:
+    from sb3_contrib import QRDQN
+    HAS_QRDQN = True
+except ImportError:
+    HAS_QRDQN = False
+
+# ── build_env: try package import, fall back to inline definition ─────────────
+try:
+    from trainer.envs import build_env
+except Exception:
+    try:
+        from envs import build_env
+    except Exception:
+        def build_env(env_id: str, seed: int, n_envs: int = 1, frame_stack: int = 4):
+            """Inline fallback environment builder."""
+            if "ALE/" in env_id or "NoFrameskip" in env_id:
+                venv = make_atari_env(env_id, n_envs=n_envs, seed=seed)
+                venv = VecFrameStack(venv, n_stack=frame_stack)
+                return venv
+            env = gym.make(env_id)
+            env.reset(seed=seed)
+            env = Monitor(env)
+            return env
+
+# ── Algorithm map ─────────────────────────────────────────────────────────────
+ALGO_MAP = {"dqn": DQN, "ppo": PPO}
+if HAS_QRDQN:
+    ALGO_MAP["rainbow"] = QRDQN
+
+
+# ── Evaluation loop ───────────────────────────────────────────────────────────
+def evaluate_model(model_path: str, env_id: str, algo: str = "dqn",
+                   n_episodes: int = 10, render: bool = False):
+    env = build_env(env_id, seed=42)
+
+    algo_cls = ALGO_MAP.get(algo.lower())
+    if algo_cls is None:
+        raise ValueError(f"Unknown algo '{algo}'. Choose from: {list(ALGO_MAP)}")
+
+    model   = algo_cls.load(model_path)
+    rewards = []
+
+    for ep in range(n_episodes):
+        # Handle both Gymnasium (obs, info) and old-style (obs,) resets
+        result = env.reset()
+        obs    = result[0] if isinstance(result, tuple) else result
+
+        done  = False
+        total = 0.0
+
+        while not done:
+            action, _ = model.predict(obs, deterministic=True)
+            step_result = env.step(action)
+
+            if len(step_result) == 5:                        # Gymnasium API
+                obs, reward, terminated, truncated, info = step_result
+                done = terminated or truncated
+            else:                                             # Old Gym API
+                obs, reward, done, info = step_result
+
+            total += float(reward)
+            if render:
+                env.render()
+
+        rewards.append(total)
+        print(f"Episode {ep + 1}: {total:.2f}")
+
+    env.close()
+    print(f"\nMean reward : {np.mean(rewards):.2f}")
+    print(f"Std  reward : {np.std(rewards):.2f}")
+    print(f"Min  reward : {np.min(rewards):.2f}")
+    print(f"Max  reward : {np.max(rewards):.2f}")
+
+
+# ── Entry point ───────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Evaluate a trained RL model")
+    parser.add_argument("config",      help="Path to YAML config used for training")
+    parser.add_argument("--model",     default="final.zip",  help="Model filename inside save_dir")
+    parser.add_argument("--episodes",  type=int, default=10, help="Number of evaluation episodes")
+    parser.add_argument("--render",    action="store_true",  help="Render the environment")
+    args = parser.parse_args()
+
+    with open(args.config, "r") as f:
+        cfg = yaml.safe_load(f)
+
+    # Auto-detect algorithm from YAML section keys
+    if "ppo"     in cfg:
+        algo = "ppo"
+    elif "rainbow" in cfg:
+        algo = "rainbow"
+    else:
+        algo = "dqn"
+
+    # Model path lives directly inside save_dir
+    model_path = os.path.join(cfg.get("save_dir", "drl-game/data/models"), args.model)
+
+    print(f"Algorithm : {algo.upper()}")
+    print(f"Env       : {cfg['env_id']}")
+    print(f"Model     : {model_path}\n")
+
+    evaluate_model(model_path, cfg["env_id"], algo, args.episodes, args.render)
