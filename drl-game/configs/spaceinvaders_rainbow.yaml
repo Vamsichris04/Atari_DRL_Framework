@@ -1,0 +1,31 @@
+run_name: spaceinvaders_rainbow_v0
+env_id: ALE/SpaceInvaders-v5
+seed: 42
+total_timesteps: 1000000
+
+log_dir: drl-game/runs/spaceinvaders_rainbow_v0
+save_dir: drl-game/models/spaceinvaders_rainbow_v0
+
+rainbow:
+  learning_rate: 1e-4
+  buffer_size: 1000000
+  batch_size: 32
+  learning_starts: 50000
+  gamma: 0.99
+  train_freq: 4
+  target_update_interval: 10000
+  exploration_final_eps: 0.01
+  exploration_fraction: 0.1
+  n_quantiles: 200
+  use_noisy_net: True
+  use_double_dqn: True
+  prioritized_replay: True
+  buffer_alpha: 0.6
+  buffer_beta: 0.4
+  buffer_beta_iters: 1000000
+
+eval:
+  enabled: True
+  freq: 10000
+  n_episodes: 5
+  deterministic: True

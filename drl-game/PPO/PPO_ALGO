@@ -1,0 +1,168 @@
+# drl-game/PPO/PPO_ALGO.py
+import os, sys, argparse, yaml
+
+# ── Make imports work regardless of which directory you run from ──────────────
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+
+import ale_py
+import gymnasium
+gymnasium.register_envs(ale_py)
+from stable_baselines3 import PPO
+from stable_baselines3.common.env_util import make_atari_env, make_vec_env
+from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
+from stable_baselines3.common.monitor import Monitor
+
+# ── JSONLoggerCallback: try package import, fall back to inline definition ────
+try:
+    from trainer.callbacks.json_logger import JSONLoggerCallback
+except Exception:
+    try:
+        from callbacks.json_logger import JSONLoggerCallback
+    except Exception:
+        import json
+        from stable_baselines3.common.callbacks import BaseCallback
+
+        class JSONLoggerCallback(BaseCallback):
+            """Inline fallback — writes newline-delimited JSON progress records."""
+            def __init__(self, out_path: str, write_freq: int = 1000, verbose: int = 0):
+                super().__init__(verbose)
+                self.out_path   = out_path
+                self.write_freq = int(write_freq)
+                self._f         = None
+
+            def _on_training_start(self) -> None:
+                os.makedirs(os.path.dirname(self.out_path) or '.', exist_ok=True)
+                self._f = open(self.out_path, 'a', encoding='utf-8')
+
+            def _on_step(self) -> bool:
+                if self.num_timesteps % self.write_freq != 0:
+                    return True
+                rec   = {'timesteps': int(self.num_timesteps)}
+                infos = self.locals.get('infos', [])
+                rews  = [float(i['episode']['r']) for i in infos if 'episode' in i]
+                lens  = [int(i['episode']['l'])   for i in infos if 'episode' in i]
+                if rews:
+                    rec.update({
+                        'episode_reward_mean': sum(rews) / len(rews),
+                        'episode_reward_max':  max(rews),
+                        'episode_reward_min':  min(rews),
+                    })
+                if lens:
+                    rec['episode_length_mean'] = sum(lens) / len(lens)
+                self._f.write(json.dumps(rec) + '\n')
+                self._f.flush()
+                return True
+
+            def _on_training_end(self) -> None:
+                if self._f:
+                    self._f.close()
+
+
+# ── Environment builder ───────────────────────────────────────────────────────
+def build_ppo_env(env_id: str, seed: int, n_envs: int = 8, frame_stack: int = 4):
+    """
+    PPO benefits from multiple parallel envs for experience collection.
+    Atari envs get standard preprocessing + frame stacking automatically.
+    """
+    if "ALE/" in env_id or "NoFrameskip" in env_id:
+        venv = make_atari_env(env_id, n_envs=n_envs, seed=seed)
+        venv = VecFrameStack(venv, n_stack=frame_stack)
+        return venv
+
+    # Non-Atari
+    venv = make_vec_env(env_id, n_envs=n_envs, seed=seed, wrapper_class=Monitor)
+    return venv
+
+
+# ── Main training routine ─────────────────────────────────────────────────────
+def main(cfg_path: str):
+    with open(cfg_path, "r") as f:
+        cfg = yaml.safe_load(f)
+
+    run_name        = cfg.get("run_name", "ppo_run")
+    log_dir         = cfg.get("log_dir",  f"drl-game/data/runs/{run_name}")
+    save_dir        = cfg.get("save_dir", f"drl-game/data/models/{run_name}")
+    env_id          = cfg["env_id"]
+    seed            = int(cfg.get("seed", 0))
+    total_timesteps = int(cfg.get("total_timesteps", 1_000_000))
+    n_envs          = int(cfg.get("n_envs", 8))
+    hp              = cfg.get("ppo", {})
+
+    os.makedirs(log_dir,  exist_ok=True)
+    os.makedirs(save_dir, exist_ok=True)
+    os.makedirs(os.path.join('drl-game', 'data'), exist_ok=True)
+
+    def _coerce_numeric(val):
+        if isinstance(val, str):
+            s = val.strip()
+            if s.isdigit():
+                return int(s)
+            try:
+                return float(s)
+            except ValueError:
+                return val
+        return val
+
+    hp = {k: _coerce_numeric(v) for k, v in hp.items()}
+
+    # ── Environments ──────────────────────────────────────────────────────────
+    env      = build_ppo_env(env_id, seed,       n_envs=n_envs)
+    eval_env = build_ppo_env(env_id, seed + 123, n_envs=1)
+
+    # ── Callbacks ─────────────────────────────────────────────────────────────
+    callbacks = []
+
+    if cfg.get("eval", {}).get("enabled", True):
+        eval_cb = EvalCallback(
+            eval_env,
+            best_model_save_path=save_dir,
+            log_path=log_dir,
+            eval_freq=max(cfg["eval"].get("freq", 50_000) // n_envs, 1),
+            n_eval_episodes=cfg["eval"].get("n_episodes", 5),
+            deterministic=cfg["eval"].get("deterministic", True),
+        )
+        callbacks.append(eval_cb)
+
+    ckpt_cb = CheckpointCallback(
+        save_freq=max(50_000 // n_envs, 1),
+        save_path=save_dir,
+        name_prefix="ckpt",
+    )
+    callbacks.append(ckpt_cb)
+
+    try:
+        env_short = env_id.split('/')[-1].split('-')[0].lower()
+    except Exception:
+        env_short = env_id.replace('/', '_').lower()
+
+    json_path = os.path.join('drl-game', 'data', f"{env_short}_ppo_progress.jsonl")
+    json_cb   = JSONLoggerCallback(json_path, write_freq=int(cfg.get("log_json_freq", 1000)))
+    callbacks.append(json_cb)
+
+    # ── Model ─────────────────────────────────────────────────────────────────
+    model = PPO(
+        "CnnPolicy",
+        env,
+        verbose=1,
+        tensorboard_log=log_dir,
+        seed=seed,
+        **hp,
+    )
+
+    # ── Train ─────────────────────────────────────────────────────────────────
+    model.learn(total_timesteps=total_timesteps, callback=callbacks)
+
+    model.save(os.path.join(save_dir, "final.zip"))
+    env.close()
+    eval_env.close()
+    print(f"\nFinished training.\n- Models : {save_dir}\n- Logs   : {log_dir}\n")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("config", nargs="?",
+                        default="drl-game/configs/Breakout_PPO.yaml",
+                        help="Path to YAML config")
+    args = parser.parse_args()
+    main(args.config)
