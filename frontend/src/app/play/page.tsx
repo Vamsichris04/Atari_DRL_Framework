@@ -119,7 +119,7 @@ function Page() {
       // Change 'Enter' to a different key to remap the reset shortcut
       if (e.key === 'Enter') { reset(instanceId); return; }
 
-      // Change ' ' to a different key to remap the start/pause shortcut
+      // Change '<Space>' to a different key to remap the start/pause shortcut
       if (e.key === ' ') {
         e.preventDefault();
         if (!isGameRunning && !isPaused) setIsGameRunning(true);
