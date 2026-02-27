@@ -1,0 +1,28 @@
+# Pong PPO
+# Pong is one of the fastest Atari games to solve with PPO
+run_name: pong_ppo_v0
+env_id: ALE/Pong-v5
+seed: 42
+total_timesteps: 3_000_000     # PPO solves Pong in ~3M steps
+n_envs: 8
+
+log_dir:  drl-game/data/runs/pong_ppo_v0
+save_dir: drl-game/data/models/pong_ppo_v0
+
+ppo:
+  learning_rate: 2.5e-4
+  n_steps: 128
+  batch_size: 256
+  n_epochs: 4
+  gamma: 0.99
+  gae_lambda: 0.95
+  clip_range: 0.1
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+
+eval:
+  enabled: true
+  freq: 50_000
+  n_episodes: 10
+  deterministic: true
