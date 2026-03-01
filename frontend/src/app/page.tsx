@@ -1,35 +1,32 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/pixelact-ui/button';
 import Link from 'next/link';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/pixelact-ui/dialog';
+import '@/components/ui/pixelact-ui/styles/styles.css';
 
 export default function Home() {
   return (
     <div className="w-full mt-40 flex items-center justify-center">
       <div className="text-center">
-        <h1 className="text-5xl font-bold">RL Studio for Atari Games</h1>
+        <h1 className="text-4xl font-bold pixel-font">RL Studio</h1>
         <Link href="/select">
-          <Button className="m-10 w-20 h-20 text-lg">Start</Button>
+          <Button className="m-10 w-25 h-25 text-lg">Start</Button>
         </Link>
         <Dialog>
           <DialogTrigger asChild className="absolute top-2 right-2">
-            <Button>Overview</Button>
+            <Button style={{ position: 'absolute' }}>Overview</Button>
           </DialogTrigger>
           <DialogContent className="text-center !w-200 !max-w-200">
             <DialogHeader>
-              <DialogTitle className="text-2xl text-center">RL Studio for Atari Games</DialogTitle>
-              <DialogDescription className="text-center text-xs">
-                This project is not affiliated with or endorsed by Atari.
-              </DialogDescription>
+              <DialogTitle className="text-2xl text-center">RL Studio</DialogTitle>
             </DialogHeader>
-            Welcome to RL Studio for Atari Games!
+            Welcome to RL Studio!
             <br />
             <br />
             This application introduces Deep Reinforcement Learning by letting you train AI agents
@@ -58,6 +55,9 @@ export default function Home() {
                     Intelligence Research, 61, 523–562.
                   </li>
                 </ul>
+                <p className="text-center text-xs">
+                  This project is not affiliated with or endorsed by Atari.
+                </p>
               </div>
             </DialogFooter>
           </DialogContent>

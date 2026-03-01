@@ -5,7 +5,7 @@ import { DataProvider } from '@/providers/data';
 import { Navigation } from '@/components/navigation';
 
 export const metadata: Metadata = {
-  title: 'RL Studio for Atari Games',
+  title: 'RL Studio',
   description: '',
 };
 

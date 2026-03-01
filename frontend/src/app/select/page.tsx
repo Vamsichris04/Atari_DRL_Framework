@@ -1,12 +1,19 @@
 'use client';
 import { useData } from '@/providers/data';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/pixelact-ui/button';
 import { useRouter } from 'next/navigation';
 import { GAMES } from '@/constants';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/pixelact-ui/card';
 import Image from 'next/image';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/pixelact-ui/input';
 import { useState } from 'react';
+import '@/components/ui/pixelact-ui/styles/styles.css';
 
 export default function Page() {
   const { setInputValue } = useData();
@@ -15,7 +22,7 @@ export default function Page() {
 
   return (
     <div className="grid grid-cols-1 gap-4">
-      <h1 className="text-3xl font-bold text-center">Select a Game</h1>
+      <h1 className="text-xl font-bold text-center pixel-font">Select a Game</h1>
       <Input
         onChange={(event) => {
           setMatchingGames(
@@ -32,7 +39,7 @@ export default function Page() {
           {matchingGames.map((game) => (
             <Card key={game.name} className="flex justify-between w-full max-w-sm gap-2">
               <CardHeader>
-                <CardTitle className="text-2xl text-center">
+                <CardTitle className="text-xl text-center">
                   {game.name
                     .replace(/ALE\//g, '')
                     .replace(/-v\d+/g, '')

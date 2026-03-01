@@ -4,17 +4,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardAction } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  CartesianGrid,
-} from 'recharts';
 
 export default function Page() {
   const [data, setData] = useState<{ [key: string]: any }>({});
