@@ -117,7 +117,10 @@ function Page() {
       if (!instanceId) return;
 
       // Change 'Enter' to a different key to remap the reset shortcut
-      if (e.key === 'Enter') { reset(instanceId); return; }
+      if (e.key === 'Enter') {
+        reset(instanceId);
+        return;
+      }
 
       // Change '<Space>' to a different key to remap the start/pause shortcut
       if (e.key === ' ') {
@@ -163,8 +166,7 @@ function Page() {
   const isFinished = statusMessage === GAME_FINISHED_MESSAGE;
 
   // Removes the "ALE/" prefix and version suffix — change this to customise the displayed title
-  const formatGameName = (name: string) =>
-    name.replace(/ALE\//g, '').replace(/-v\d+/g, '').trim();
+  const formatGameName = (name: string) => name.replace(/ALE\//g, '').replace(/-v\d+/g, '').trim();
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -255,7 +257,10 @@ function Page() {
             </CardHeader>
             <div className="p-6 flex justify-center">
               {/* Change width: 420 to resize the game canvas */}
-              <div className="relative bg-black rounded-lg overflow-hidden" style={{ width: 420, height: 'auto' }}>
+              <div
+                className="relative bg-black rounded-lg overflow-hidden"
+                style={{ width: 420, height: 'auto' }}
+              >
                 {renderedImage ? (
                   <>
                     {/* Change width={420} here too if you resize the canvas above */}
@@ -275,7 +280,10 @@ function Page() {
                     )}
                   </>
                 ) : (
-                  <div className="flex items-center justify-center" style={{ width: 320, height: 240 }}>
+                  <div
+                    className="flex items-center justify-center"
+                    style={{ width: 320, height: 240 }}
+                  >
                     <p className="text-muted-foreground text-sm">Loading environment...</p>
                   </div>
                 )}
@@ -336,7 +344,8 @@ function Page() {
                     }}
                     className="transition-all"
                   >
-                    {action.label} {action.key && <span className="text-xs opacity-60">[{action.key}]</span>}
+                    {action.label}{' '}
+                    {action.key && <span className="text-xs opacity-60">[{action.key}]</span>}
                   </Button>
                 ))}
               </div>

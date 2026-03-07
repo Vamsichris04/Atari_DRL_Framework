@@ -116,7 +116,21 @@ export interface InputDataType {
 }
 
 export interface OutputDataType {
-  game: GameName | undefined;
+  games: {
+    [key in GameName]?: {
+      agents: {
+        [key in string]: {
+          average_total_reward: number;
+          high_score: number;
+          average_score: number;
+          episodes: {
+            episode_number: number;
+            reward: number;
+          }[];
+        };
+      };
+    };
+  };
 }
 
 export interface DataContextType {
