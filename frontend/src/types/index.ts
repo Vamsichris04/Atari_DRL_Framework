@@ -207,6 +207,10 @@ export type Parameter = {
   isBoolean?: boolean;
   max?: number;
   min?: number;
+  details?: string;
+  pros?: string[];
+  cons?: string[];
+  tip?: string;
 };
 
 export type ParameterKeys = keyof DQNParameters | keyof RainbowParameters | keyof PPOParameters;
