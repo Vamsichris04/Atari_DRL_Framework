@@ -82,7 +82,9 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
           {/* Pros */}
           {parameter.pros && (
             <div>
-              <p className="pixel-font text-[9px] font-semibold mb-1 text-green-600 dark:text-green-400">✓ PROS</p>
+              <p className="pixel-font text-[9px] font-semibold mb-1 text-green-600 dark:text-green-400">
+                ✓ PROS
+              </p>
               <div className="grid gap-1">
                 {parameter.pros.map((pro, i) => (
                   <div key={i} className="flex gap-1.5 text-muted-foreground">
@@ -97,7 +99,9 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
           {/* Cons */}
           {parameter.cons && (
             <div>
-              <p className="pixel-font text-[9px] font-semibold mb-1 text-red-600 dark:text-red-400">✗ CONS</p>
+              <p className="pixel-font text-[9px] font-semibold mb-1 text-red-600 dark:text-red-400">
+                ✗ CONS
+              </p>
               <div className="grid gap-1">
                 {parameter.cons.map((con, i) => (
                   <div key={i} className="flex gap-1.5 text-muted-foreground">

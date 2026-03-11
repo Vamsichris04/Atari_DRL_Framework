@@ -378,7 +378,7 @@ export const PARAMETERS: Parameter[] = [
     title: 'Number of Steps',
     description: 'Number of steps to collect before each policy update.',
     details:
-      'PPO is an on-policy algorithm that collects a fixed number of environment steps (a rollout) before performing a policy update. n_steps defines the length of this rollout. Longer rollouts give a better estimate of the advantage function because they capture more of the trajectory\'s return. They also reduce the frequency of updates, which can stabilise training. Shorter rollouts update the policy more frequently with noisier estimates. The total number of samples per update is n_steps multiplied by the number of parallel environments.',
+      "PPO is an on-policy algorithm that collects a fixed number of environment steps (a rollout) before performing a policy update. n_steps defines the length of this rollout. Longer rollouts give a better estimate of the advantage function because they capture more of the trajectory's return. They also reduce the frequency of updates, which can stabilise training. Shorter rollouts update the policy more frequently with noisier estimates. The total number of samples per update is n_steps multiplied by the number of parallel environments.",
     pros: [
       'More steps give a better estimate of the advantage function',
       'Reduces variance in policy gradient updates',
@@ -436,7 +436,7 @@ export const PARAMETERS: Parameter[] = [
     title: 'Clip Range',
     description: 'Limits how much the policy can change per update step.',
     details:
-      'PPO\'s core innovation is the clipped surrogate objective. When updating the policy, the ratio of the new policy probability to the old policy probability is clipped to the range [1-clip_range, 1+clip_range]. This prevents any single update from making a large change to the policy, which was the main failure mode of the earlier TRPO algorithm. The clipping creates a pessimistic bound on the policy improvement, ensuring stable monotonic improvement. A smaller clip range is more conservative; a larger clip range allows bigger updates but risks instability.',
+      "PPO's core innovation is the clipped surrogate objective. When updating the policy, the ratio of the new policy probability to the old policy probability is clipped to the range [1-clip_range, 1+clip_range]. This prevents any single update from making a large change to the policy, which was the main failure mode of the earlier TRPO algorithm. The clipping creates a pessimistic bound on the policy improvement, ensuring stable monotonic improvement. A smaller clip range is more conservative; a larger clip range allows bigger updates but risks instability.",
     pros: [
       'Prevents destructively large policy updates',
       'Core stability mechanism of the PPO algorithm',
