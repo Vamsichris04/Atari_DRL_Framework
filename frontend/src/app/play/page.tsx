@@ -3,8 +3,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useData } from '@/providers/data';
 import { GAMES } from '@/constants';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/pixelact-ui/button';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/pixelact-ui/card';
 import { createEnvironment, fetchRender, resetEnvironment, takeAction } from '@/api/api';
 import { cn } from '@/lib/utils';
 import { Game } from '@/types';
@@ -294,7 +294,7 @@ function Page() {
                 <Button
                   onClick={() => reset(instanceId as number)}
                   disabled={!instanceId}
-                  variant="outline"
+                  variant="secondary"
                   className="flex-1"
                 >
                   ↺ Reset [Enter]
@@ -317,7 +317,7 @@ function Page() {
                 {game.actions.map((action) => (
                   <Button
                     key={action.action}
-                    variant={activeActionIndex === action.action ? 'default' : 'outline'}
+                    variant={activeActionIndex === action.action ? 'default' : 'secondary'}
                     size="sm"
                     onMouseDown={() => {
                       if (!isGameRunning && !isPaused) setIsGameRunning(true);
