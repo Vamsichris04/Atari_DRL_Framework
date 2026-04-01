@@ -4,6 +4,14 @@ import { useData } from '@/providers/data';
 // import { stringify } from 'yaml';
 import { Parameters } from '@/types';
 
+/** WebSocket URL for the training env live preview (`/training/stream`). */
+export function trainingWebSocketUrl(envId: string): string {
+  const u = new URL(API_URL);
+  const wsProto = u.protocol === 'https:' ? 'wss:' : 'ws:';
+  const params = new URLSearchParams({ env_id: envId });
+  return `${wsProto}//${u.host}/training/stream?${params.toString()}`;
+}
+
 export async function createEnvironment(environment: string) {
   const response = await fetch(`${API_URL}/envs/`, {
     method: 'POST',
@@ -11,33 +19,41 @@ export async function createEnvironment(environment: string) {
     body: JSON.stringify({ env_id: environment }),
   });
   const data = await response.json();
-  const newInstanceId = data.instance_id;
-  return newInstanceId as number;
+  return data.instance_id as string;
 }
 
-export async function resetEnvironment(id: number) {
-  const response = await fetch(`${API_URL}/envs/${id}/reset/`, {
+export async function resetEnvironment(id: string, options?: { render?: boolean }) {
+  const q = options?.render ? '?render=true' : '';
+  const response = await fetch(`${API_URL}/envs/${id}/reset/${q}`, {
     method: 'POST',
   });
   const data = await response.json();
-  return data.observation;
+  return {
+    observation: data.observation,
+    image: typeof data.image === 'string' ? data.image : undefined,
+  };
 }
 
-export async function takeAction(instanceId: number, action: number) {
+export async function takeAction(
+  instanceId: string,
+  action: number,
+  options?: { render?: boolean }
+) {
   const response = await fetch(`${API_URL}/envs/${instanceId}/step/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action }),
+    body: JSON.stringify({ action, render: options?.render ?? false }),
   });
   const data = await response.json();
   return {
     observation: data.observation,
     reward: data.reward,
     episodeDone: data.terminated || data.truncated,
+    image: typeof data.image === 'string' ? data.image : undefined,
   };
 }
 
-export async function fetchRender(id: number) {
+export async function fetchRender(id: string) {
   const response = await fetch(`${API_URL}/envs/${id}/render/`);
   const data = await response.json();
   return data.image as string;
