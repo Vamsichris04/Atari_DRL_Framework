@@ -1,9 +1,11 @@
 import asyncio
 import base64
 import io
+
+import ale_py  # noqa: F401 — registers ALE envs with Gymnasium
+import gymnasium as gym
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
-import gymnasium as gym
 from PIL import Image
 
 router = APIRouter()
@@ -31,13 +33,17 @@ async def get_status():
 async def stream_game(ws: WebSocket):
     """Send live frames and rewards from a Gymnasium environment."""
     await ws.accept()
-    env = gym.make("ALE/Breakout-v5", render_mode="rgb_array")
+    env_id = ws.query_params.get("env_id", "ALE/Breakout-v5")
+    env = gym.make(env_id, render_mode="rgb_array")
     obs, _ = env.reset()
+    episode_return = 0.0
 
     try:
         while True:
             action = env.action_space.sample()  # replace with agent action later
             obs, reward, terminated, truncated, _ = env.step(action)
+            r = float(reward)
+            episode_return += r
             frame = env.render()
 
             image = Image.fromarray(frame)
@@ -47,14 +53,18 @@ async def stream_game(ws: WebSocket):
 
             await ws.send_json({
                 "frame": frame_b64,
-                "reward": float(reward),
+                "step_reward": r,
+                "episode_return": episode_return,
+                "terminated": terminated,
+                "truncated": truncated,
             })
 
             if terminated or truncated:
                 obs, _ = env.reset()
+                episode_return = 0.0
                 training_status["episode"] += 1
 
-            training_status["reward"] = reward
+            training_status["reward"] = r
             await asyncio.sleep(0.05)
     except WebSocketDisconnect:
         env.close()
