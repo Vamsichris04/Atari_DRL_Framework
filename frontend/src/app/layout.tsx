@@ -3,6 +3,7 @@ import './globals.css';
 import React from 'react';
 import { DataProvider } from '@/providers/data';
 import { Navigation } from '@/components/navigation';
+import { Chatbot } from '@/app/chatbot';
 
 export const metadata: Metadata = {
   title: 'RL Studio',
@@ -20,6 +21,7 @@ export default function RootLayout({
         <DataProvider>
           <div className="w-full mb-14 p-2">{children}</div>
           <Navigation />
+          <Chatbot />
         </DataProvider>
       </body>
     </html>
