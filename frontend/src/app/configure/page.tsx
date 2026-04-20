@@ -17,6 +17,17 @@ import {
 } from '@/components/ui/pixelact-ui/select';
 import '@/components/ui/pixelact-ui/styles/styles.css';
 
+const sectionHeadingClass =
+  'pixel-font text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-1';
+const bodyMutedClass = 'pixel-font text-xs text-muted-foreground leading-relaxed';
+
+function parseNonNegativeNumber(raw: string): number | null {
+  if (raw === '' || raw === '.' || raw === '-.') return null;
+  const parsed = Number(raw);
+  if (!Number.isFinite(parsed)) return null;
+  return Math.max(0, parsed);
+}
+
 function InfoTooltip({ parameter }: { parameter: Parameter }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -33,6 +44,8 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
   return (
     <div ref={ref} style={{ position: 'relative', display: 'inline-block', marginLeft: 6 }}>
       <button
+        type="button"
+        className="pixel-font"
         onClick={() => setOpen((v) => !v)}
         title={`More info: ${parameter.title}`}
         style={{
@@ -41,9 +54,8 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
           background: open ? 'var(--pixel-primary, #000)' : 'transparent',
           border: '2px solid currentColor',
           color: open ? 'var(--pixel-primary-foreground, #fff)' : 'var(--muted-foreground, #888)',
-          fontFamily: 'inherit',
           fontWeight: 'bold',
-          fontSize: 11,
+          fontSize: 10,
           cursor: 'pointer',
           display: 'inline-flex',
           alignItems: 'center',
@@ -66,29 +78,24 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
             zIndex: 100,
             width: 320,
           }}
-          className="pixel-border bg-background text-foreground p-3 text-sm grid gap-3 shadow-lg"
+          className="pixel-border bg-background p-3 grid gap-3 shadow-lg"
         >
-          {/* Title */}
-          <p className="pixel-font font-bold text-xs">{parameter.title}</p>
+          <p className="pixel-font text-xs font-bold text-foreground">{parameter.title}</p>
 
-          {/* Overview */}
           {parameter.details && (
             <div>
-              <p className="pixel-font text-[9px] font-semibold mb-1">OVERVIEW</p>
-              <p className="text-muted-foreground leading-relaxed">{parameter.details}</p>
+              <p className={sectionHeadingClass}>Overview</p>
+              <p className={bodyMutedClass}>{parameter.details}</p>
             </div>
           )}
 
-          {/* Pros */}
           {parameter.pros && (
             <div>
-              <p className="pixel-font text-[9px] font-semibold mb-1 text-green-600 dark:text-green-400">
-                ✓ PROS
-              </p>
+              <p className={sectionHeadingClass}>Pros</p>
               <div className="grid gap-1">
                 {parameter.pros.map((pro, i) => (
-                  <div key={i} className="flex gap-1.5 text-muted-foreground">
-                    <span className="text-green-500 shrink-0">+</span>
+                  <div key={i} className={`flex gap-1.5 ${bodyMutedClass}`}>
+                    <span className="text-muted-foreground shrink-0">+</span>
                     <span>{pro}</span>
                   </div>
                 ))}
@@ -96,16 +103,13 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
             </div>
           )}
 
-          {/* Cons */}
           {parameter.cons && (
             <div>
-              <p className="pixel-font text-[9px] font-semibold mb-1 text-red-600 dark:text-red-400">
-                ✗ CONS
-              </p>
+              <p className={sectionHeadingClass}>Cons</p>
               <div className="grid gap-1">
                 {parameter.cons.map((con, i) => (
-                  <div key={i} className="flex gap-1.5 text-muted-foreground">
-                    <span className="text-red-500 shrink-0">−</span>
+                  <div key={i} className={`flex gap-1.5 ${bodyMutedClass}`}>
+                    <span className="text-muted-foreground shrink-0">−</span>
                     <span>{con}</span>
                   </div>
                 ))}
@@ -113,11 +117,10 @@ function InfoTooltip({ parameter }: { parameter: Parameter }) {
             </div>
           )}
 
-          {/* Tip */}
           {parameter.tip && (
-            <div className="border-t pt-2 flex gap-1.5 text-muted-foreground">
-              <span className="text-yellow-500 shrink-0">★</span>
-              <span>{parameter.tip}</span>
+            <div className="border-t border-border pt-2">
+              <p className={sectionHeadingClass}>Tip</p>
+              <p className={bodyMutedClass}>{parameter.tip}</p>
             </div>
           )}
         </div>
@@ -132,6 +135,8 @@ export default function Page() {
   const { runAgent } = useAgent();
   const algorithm = inputData.algorithm;
   const [activeParameter, setActiveParameter] = useState<Parameter | null>(null);
+  /** Lets users type "-" for Rainbow `v_min` while the field is focused (controlled inputs otherwise reject "-"). */
+  const [vMinDraft, setVMinDraft] = useState<string | null>(null);
   const [parameters, setParameters] = useState<Parameters>(() => {
     const initial: Partial<Parameters> = {};
     PARAMETERS.filter((p) => p.algorithms.includes(algorithm as Algorithm)).forEach((p) => {
@@ -161,7 +166,9 @@ export default function Page() {
 
   return (
     <div className="grid gap-4 p-8">
-      <h1 className="text-3xl font-bold text-center pixel-font">Configure the Agent</h1>
+      <h1 className="pixel-font text-xl sm:text-2xl font-bold text-center text-foreground">
+        Configure the Agent
+      </h1>
       <div className="flex justify-center items-start gap-20">
         <div className="grid gap-2 w-100">
           {PARAMETERS.filter((parameter) =>
@@ -189,23 +196,61 @@ export default function Page() {
                     <SelectItem value="false">No</SelectItem>
                   </SelectContent>
                 </Select>
+              ) : parameter.key === 'v_min' ? (
+                <Input
+                  id={parameter.key}
+                  className="w-32"
+                  type="number"
+                  onFocus={() => {
+                    setActiveParameter(parameter);
+                    setVMinDraft(String(parameters[parameter.key as keyof Parameters] as number));
+                  }}
+                  onBlur={() => {
+                    setActiveParameter(null);
+                    const raw = vMinDraft ?? '';
+                    const n = raw === '' || raw === '-' ? 0 : Number(raw);
+                    if (Number.isFinite(n)) handleChange('v_min', n, false);
+                    setVMinDraft(null);
+                  }}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    setVMinDraft(raw);
+                    if (raw !== '' && raw !== '-') {
+                      const n = Number(raw);
+                      if (Number.isFinite(n)) handleChange('v_min', n, false);
+                    }
+                  }}
+                  value={vMinDraft !== null ? vMinDraft : (parameters[parameter.key as keyof Parameters] as number)}
+                  max={parameter.max}
+                  min={parameter.min}
+                />
               ) : (
                 <Input
                   id={parameter.key}
                   className="w-32"
                   type="number"
                   onFocus={() => setActiveParameter(parameter)}
-                  onBlur={() => setActiveParameter(null)}
-                  onChange={(e) => handleChange(parameter.key, Number(e.target.value), false)}
+                  onBlur={() => {
+                    setActiveParameter(null);
+                    const v = parameters[parameter.key as keyof Parameters] as number;
+                    if (v < 0) handleChange(parameter.key, 0, false);
+                  }}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    if (raw.trimStart().startsWith('-')) return;
+                    const next = parseNonNegativeNumber(raw);
+                    if (next === null) return;
+                    handleChange(parameter.key, next, false);
+                  }}
                   value={parameters[parameter.key as keyof Parameters]}
                   max={parameter.max}
-                  min={parameter.min}
+                  min={parameter.min ?? 0}
                 />
               )}
             </div>
           ))}
         </div>
-        <div className="w-60 text-wrap text-sm text-muted-foreground">
+        <div className="w-60 text-wrap pixel-font text-xs text-muted-foreground leading-relaxed">
           {activeParameter?.description}
         </div>
       </div>

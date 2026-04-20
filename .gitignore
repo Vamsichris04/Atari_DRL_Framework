@@ -4,4 +4,5 @@ drl-game/runs/
 *.pyc
 .venv/
 node_modules/
+.pnpm-store/
 .next/
