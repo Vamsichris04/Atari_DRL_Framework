@@ -177,8 +177,7 @@ function Page() {
       }
     };
 
-    ws.onerror = () =>
-      setAiStreamStatus('Stream error — is the backend running (port 8000)?');
+    ws.onerror = () => setAiStreamStatus('Stream error — is the backend running (port 8000)?');
 
     ws.onclose = () => {
       setAiStreamStatus((prev) => (prev === 'Live' ? 'Disconnected' : prev));
@@ -207,7 +206,10 @@ function Page() {
       if (!instanceId) return;
 
       // Change 'Enter' to a different key to remap the reset shortcut
-      if (e.key === 'Enter') { reset(instanceId); return; }
+      if (e.key === 'Enter') {
+        reset(instanceId);
+        return;
+      }
 
       // Change '<Space>' to a different key to remap the start/pause shortcut
       if (e.key === ' ') {
@@ -253,8 +255,7 @@ function Page() {
   const isFinished = statusMessage === GAME_FINISHED_MESSAGE;
 
   // Removes the "ALE/" prefix and version suffix — change this to customise the displayed title
-  const formatGameName = (name: string) =>
-    name.replace(/ALE\//g, '').replace(/-v\d+/g, '').trim();
+  const formatGameName = (name: string) => name.replace(/ALE\//g, '').replace(/-v\d+/g, '').trim();
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -307,22 +308,23 @@ function Page() {
               <CardHeader>
                 <CardTitle>AI preview</CardTitle>
                 <CardDescription className="text-xs">
-                  Episode return on the training stream (resets each new episode). Separate env from your play
-                  session.
+                  Episode return on the training stream (resets each new episode). Separate env from
+                  your play session.
                 </CardDescription>
               </CardHeader>
               <div className="p-6">
                 <div className="text-center">
                   <p className="text-3xl font-bold tabular-nums">
                     {aiEpisodeReturn !== null && Number.isFinite(aiEpisodeReturn)
-                      ? (Number.isInteger(aiEpisodeReturn)
-                          ? String(aiEpisodeReturn)
-                          : aiEpisodeReturn.toFixed(2))
+                      ? Number.isInteger(aiEpisodeReturn)
+                        ? String(aiEpisodeReturn)
+                        : aiEpisodeReturn.toFixed(2)
                       : '—'}
                   </p>
                   {aiStepReward !== null && Number.isFinite(aiStepReward) && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      Last step: {Number.isInteger(aiStepReward) ? aiStepReward : aiStepReward.toFixed(2)}
+                      Last step:{' '}
+                      {Number.isInteger(aiStepReward) ? aiStepReward : aiStepReward.toFixed(2)}
                     </p>
                   )}
                   <p className="text-xs text-muted-foreground mt-2">{aiStreamStatus}</p>
@@ -400,7 +402,9 @@ function Page() {
                     </>
                   )}
                   {!showAiVersus && (
-                    <p className="text-sm text-muted-foreground self-center mb-1">{statusMessage}</p>
+                    <p className="text-sm text-muted-foreground self-center mb-1">
+                      {statusMessage}
+                    </p>
                   )}
                   <div
                     className="relative bg-black rounded-lg overflow-hidden"
@@ -450,10 +454,10 @@ function Page() {
                           style={{ imageRendering: 'pixelated' }}
                         />
                       ) : (
-                        <div
-                          className="flex flex-col items-center justify-center gap-2 px-4 text-center w-full min-h-[200px] max-w-[420px] mx-auto aspect-[4/3]"
-                        >
-                          <p className="text-muted-foreground text-sm">{aiStreamStatus || 'Waiting…'}</p>
+                        <div className="flex flex-col items-center justify-center gap-2 px-4 text-center w-full min-h-[200px] max-w-[420px] mx-auto aspect-[4/3]">
+                          <p className="text-muted-foreground text-sm">
+                            {aiStreamStatus || 'Waiting…'}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -516,7 +520,8 @@ function Page() {
                     }}
                     className="transition-all"
                   >
-                    {action.label} {action.key && <span className="text-xs opacity-60">[{action.key}]</span>}
+                    {action.label}{' '}
+                    {action.key && <span className="text-xs opacity-60">[{action.key}]</span>}
                   </Button>
                 ))}
               </div>
