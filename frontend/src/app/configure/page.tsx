@@ -220,7 +220,11 @@ export default function Page() {
                       if (Number.isFinite(n)) handleChange('v_min', n, false);
                     }
                   }}
-                  value={vMinDraft !== null ? vMinDraft : (parameters[parameter.key as keyof Parameters] as number)}
+                  value={
+                    vMinDraft !== null
+                      ? vMinDraft
+                      : (parameters[parameter.key as keyof Parameters] as number)
+                  }
                   max={parameter.max}
                   min={parameter.min}
                 />
