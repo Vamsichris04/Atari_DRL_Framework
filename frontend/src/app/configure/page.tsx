@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/pixelact-ui/select';
 import '@/components/ui/pixelact-ui/styles/styles.css';
+import { flushSync } from 'react-dom';
 
 const sectionHeadingClass =
   'pixel-font text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-1';
@@ -158,11 +159,29 @@ export default function Page() {
     }
   };
 
+  const [shouldRun, setShouldRun] = useState(false);
+  const pendingRef = useRef<boolean | null>(null);
+
   useEffect(() => {
-    if (!inputData.game || !inputData.algorithm) {
-      router.push('/select');
-    }
-  }, [inputData, router]);
+      if (!inputData.game || !inputData.algorithm) {
+        router.push('/select');
+      }
+    }, [inputData, router]);
+
+    useEffect(() => {
+    if (!shouldRun) return;
+    if (!pendingRef.current) return;
+
+    const execute = async () => {
+      await runAgent();
+      router.push('/play');
+
+      pendingRef.current = false;
+      setShouldRun(false);
+    };
+
+    execute();
+  }, [shouldRun]);
 
   return (
     <div className="grid gap-4 p-8">
@@ -260,10 +279,11 @@ export default function Page() {
       </div>
       <div className="flex justify-center mt-4">
         <Button
-          onClick={async () => {
+          onClick={() => {
             setInputValue('parameters', parameters);
-            await runAgent();
-            router.push('/play');
+
+            pendingRef.current = true;
+            setShouldRun(true);
           }}
         >
           Next

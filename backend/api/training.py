@@ -1,12 +1,17 @@
 import asyncio
 import base64
 import io
+import time
 
 import ale_py  # noqa: F401 — registers ALE envs with Gymnasium
 import gymnasium as gym
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 from PIL import Image
+
+import subprocess
+import yaml
+import os
 
 router = APIRouter()
 
@@ -17,12 +22,39 @@ class TrainRequest(BaseModel):
     episodes: int = 1
 
 @router.post("/start")
-async def start_training(req: TrainRequest):
-    """Start a training run (placeholder, to be replaced with actual implementation)."""
+async def start_training(req: dict):
+    """Start a training run."""
+
+    run_name = req.get("run_name", f"run_{int(time.time())}")
+
+    config_path = f"../drl-game/configs/{run_name.split('/')[-1]}.yaml"
+
+    with open(config_path, "w") as f:
+        yaml.dump(req, f)
+
+    process = subprocess.Popen(
+        ["python", "../drl-game/trainer/trainer.py", config_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+
     training_status["running"] = True
     training_status["episode"] = 0
     training_status["reward"] = 0.0
-    return {"message": f"Training started for {req.env_id}", "episodes": req.episodes}
+
+    def stream_logs():
+        for line in process.stdout:
+            print(f"[TRAINER] {line}", end="")
+
+    import threading
+    threading.Thread(target=stream_logs, daemon=True).start()
+
+    return {
+        "message": f"Training started: {run_name}",
+        "config_path": config_path
+    }
 
 @router.get("/status")
 async def get_status():

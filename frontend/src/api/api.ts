@@ -84,14 +84,18 @@ export function useAgent() {
       deterministic: true,
     };
 
-    // TODO: Commented out below and above, until backend is able to accept calls
-    // const response = await fetch(`${API_URL}/run`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/yaml' },
-    //   body: stringify(body)
-    // })
-    // const data = await response.json();
-    // setOutputData(data)
+    console.log(body);
+
+    const res = await fetch(`${API_URL}/training/start`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+    console.log(data);
   }
 
   return { runAgent };
