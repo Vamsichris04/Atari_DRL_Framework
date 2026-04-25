@@ -149,7 +149,7 @@ function Page() {
     }
 
     setAiStreamStatus('Connecting…');
-    const ws = new WebSocket(trainingWebSocketUrl(game.name));
+    const ws = new WebSocket(trainingWebSocketUrl());
 
     ws.onopen = () => setAiStreamStatus('Live');
 

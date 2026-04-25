@@ -2,6 +2,7 @@
 import gymnasium as gym
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack
+from stable_baselines3.common.vec_env.vec_transpose import VecTransposeImage
 from stable_baselines3.common.monitor import Monitor
 import warnings
 
@@ -15,6 +16,7 @@ def build_env(env_id: str, seed: int, n_envs: int = 1, frame_stack: int = 4):
     if "ALE/" in env_id or "NoFrameskip" in env_id:
         venv = make_atari_env(env_id, n_envs=n_envs, seed=seed)
         venv = VecFrameStack(venv, n_stack=frame_stack)
+        venv = VecTransposeImage(venv)
         return venv
 
     # Default Gymnasium envs

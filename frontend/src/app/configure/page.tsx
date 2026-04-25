@@ -163,12 +163,12 @@ export default function Page() {
   const pendingRef = useRef<boolean | null>(null);
 
   useEffect(() => {
-      if (!inputData.game || !inputData.algorithm) {
-        router.push('/select');
-      }
-    }, [inputData, router]);
+    if (!inputData.game || !inputData.algorithm) {
+      router.push('/select');
+    }
+  }, [inputData, router]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!shouldRun) return;
     if (!pendingRef.current) return;
 

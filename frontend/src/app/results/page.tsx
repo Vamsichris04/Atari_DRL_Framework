@@ -1,6 +1,6 @@
 'use client';
 
-import React, { JSX, useEffect, useMemo, useState } from 'react';
+import React, { JSX, useMemo, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/pixelact-ui/card';
 import { Button } from '@/components/ui/pixelact-ui/button';
 import {
@@ -18,7 +18,7 @@ import { Bar, LinePath } from '@visx/shape';
 import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { OutputDataType } from '@/types';
-import { useRouter } from 'next/navigation';
+import { fetchResults, fetchStatus } from '@/api/api';
 
 type Episode = { episode_number: number; reward: number };
 
@@ -253,8 +253,7 @@ function LineChartVisX({ series }: { series: LineSeries[] }) {
 }
 
 export default function Page() {
-  const { outputData } = useData();
-  const router = useRouter();
+  const { outputData, setOutputData } = useData();
 
   const summaries = useMemo(() => buildSummaries(outputData), [outputData]);
 
@@ -302,11 +301,23 @@ export default function Page() {
             episodes: s.episodes,
           }));
 
-  useEffect(() => {
-    if (Object.entries(outputData.games).length === 0) {
-      router.push('/select');
+  const interval = setInterval(async () => {
+    try {
+      const status = await fetchStatus();
+
+      if (!status?.running) {
+        const results = await fetchResults();
+
+        if (results) {
+          setOutputData(results);
+          clearInterval(interval);
+        }
+      }
+    } catch (err) {
+      console.error('Backend unreachable or returned an error:', err);
+      clearInterval(interval);
     }
-  }, [outputData, router]);
+  }, 2000);
 
   return (
     <div className="p-4 flex flex-col gap-4">

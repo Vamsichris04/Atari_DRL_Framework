@@ -1,15 +1,13 @@
 'use client';
 import { API_URL } from '@/constants';
 import { useData } from '@/providers/data';
-// import { stringify } from 'yaml';
-import { Parameters } from '@/types';
+import { OutputDataType, Parameters } from '@/types';
 
 /** WebSocket URL for the training env live preview (`/training/stream`). */
-export function trainingWebSocketUrl(envId: string): string {
+export function trainingWebSocketUrl(): string {
   const u = new URL(API_URL);
   const wsProto = u.protocol === 'https:' ? 'wss:' : 'ws:';
-  const params = new URLSearchParams({ env_id: envId });
-  return `${wsProto}//${u.host}/training/stream?${params.toString()}`;
+  return `${wsProto}//${u.host}/v1/training/stream`;
 }
 
 export async function createEnvironment(environment: string) {
@@ -60,7 +58,6 @@ export async function fetchRender(id: string) {
 }
 
 export function useAgent() {
-  // const { inputData, setOutputData } = useData();
   const { inputData } = useData();
 
   async function runAgent() {
@@ -87,9 +84,9 @@ export function useAgent() {
     console.log(body);
 
     const res = await fetch(`${API_URL}/training/start`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(body),
     });
@@ -99,4 +96,15 @@ export function useAgent() {
   }
 
   return { runAgent };
+}
+
+export async function fetchResults() {
+  const response = await fetch(`${API_URL}/training/results`);
+  const data = await response.json();
+  return data as OutputDataType;
+}
+
+export async function fetchStatus() {
+  const response = await fetch(`${API_URL}/training/status`);
+  return await response.json();
 }

@@ -2,12 +2,18 @@ import os
 import argparse
 import yaml
 import gymnasium as gym
+import ale_py
 
 from stable_baselines3 import DQN
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import VecFrameStack
 from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
 from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.callbacks import BaseCallback
+import numpy as np
+
+gym.register_envs(ale_py)
+
 try:
     # When installed or run as module
     from trainer.callbacks.json_logger import JSONLoggerCallback
@@ -17,7 +23,40 @@ except Exception:
     from callbacks.json_logger import JSONLoggerCallback
     from envs import build_env
 
-def main(cfg_path: str):
+class StreamCallback(BaseCallback):
+    def __init__(self, queue, verbose=0):
+        super().__init__(verbose)
+        self.queue = queue
+        self.episode_reward = 0
+        self.episode_idx = 0
+        self.episodes = []
+
+    def _on_step(self):
+        reward = float(self.locals["rewards"][0])
+        self.episode_reward += reward
+        frame = self.training_env.render(mode="rgb_array")
+        self.queue.put({
+            "frame": frame,
+            "reward": reward,
+            "episode": self.episode_idx,
+            "done": False
+        })
+        done = bool(self.locals["dones"][0])
+        if done:
+            self.episodes.append({
+                "episode_number": self.episode_idx,
+                "reward": self.episode_reward
+            })
+            self.queue.put({
+                "episode": self.episode_idx,
+                "episode_return": self.episode_reward,
+                "done": True
+            })
+            self.episode_idx += 1
+            self.episode_reward = 0
+        return True
+
+def main(cfg_path: str, queue=None):
     with open(cfg_path, "r") as f:
         cfg = yaml.safe_load(f)
 
@@ -83,6 +122,11 @@ def main(cfg_path: str):
     json_cb = JSONLoggerCallback(json_path, write_freq=json_freq)
     callbacks.append(json_cb)
 
+    stream_cb = None
+    if queue is not None:
+        stream_cb = StreamCallback(queue)
+        callbacks.append(stream_cb)
+
     # ================================= Model ========================================== #
     model = DQN(
         "CnnPolicy",
@@ -100,10 +144,30 @@ def main(cfg_path: str):
     final_path = os.path.join(save_dir, "final.zip")
     model.save(final_path)
 
+    if queue is not None:
+        episode_rewards = [e["reward"] for e in stream_cb.episodes]
+        avg_reward = float(np.mean(episode_rewards)) if episode_rewards else 0.0
+        high_score = float(np.max(episode_rewards)) if episode_rewards else 0.0
+        queue.put({
+            "results": {
+                "game": env_id,
+                "agent": "dqn",
+                "episodes": stream_cb.episodes,
+                "average_total_reward": avg_reward,
+                "high_score": high_score,
+                "average_score": avg_reward,
+                "final_model_path": final_path,
+                "total_timesteps": total_timesteps
+            }
+        })
+
     # Clean up
     env.close()
     eval_env.close()
     print(f"\n Finished training.\n- Best/ckpt models: {save_dir}\n- TensorBoard logs: {log_dir}\n")
+
+def trainer_main(cfg_path, queue):
+    main(cfg_path, queue)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

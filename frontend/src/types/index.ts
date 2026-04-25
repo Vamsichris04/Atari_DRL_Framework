@@ -117,7 +117,7 @@ export interface InputDataType {
 
 export interface OutputDataType {
   games: {
-    [key in GameName]?: {
+    [key in GameName]: {
       agents: {
         [key in string]: {
           average_total_reward: number;
@@ -127,6 +127,8 @@ export interface OutputDataType {
             episode_number: number;
             reward: number;
           }[];
+          final_model_path: string;
+          total_timesteps: number;
         };
       };
     };
